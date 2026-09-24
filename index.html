@@ -475,68 +475,82 @@
 
       let menuItems = [];
 
-      // Helper function to parse CSV robustly
-      function parseCSV(csvText) {
-        const lines = csvText.trim().split(/\r?\n/);
-        if (lines.length < 2) return [];
+      // ============================================================
+// REPLACE your whole old parseCSV() function with everything below.
+// (Keep your `categories` array, fetchMenuFromSheets(), and everything else.)
+// ============================================================
 
-        const headers = lines[0].split(",").map((h) =>
-          h
-            .trim()
-            .toLowerCase()
-            .replace(/[^a-z0-9]/g, ""),
-        );
+// Sheet category name (lowercase)  ->  your tab id in `categories`
+const CATEGORY_MAP = {
+  "easy fix combo": "combo",
+  "rice & pasta": "rice-pasta",
+  "porridge": "porridge",
+  "soup, stew & sauce": "soups",
+  "swallow": "swallow",
+  "protein - trays & platters": "protein",
+};
 
-        return lines.slice(1).map((line, idx) => {
-          // Handle quoted cells containing commas
-          const values =
-            line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || line.split(",");
-          const cleanValues = values.map((v) => v.replace(/^"|"$/g, "").trim());
+// Proper CSV reader: handles quoted cells, commas inside quotes, and empty cells
+function parseCSVRows(text) {
+  const rows = [];
+  let row = [], cell = "", inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { cell += '"'; i++; }
+        else inQuotes = false;
+      } else cell += c;
+    } else if (c === '"') inQuotes = true;
+    else if (c === ",") { row.push(cell); cell = ""; }
+    else if (c === "\n" || c === "\r") {
+      if (c === "\r" && text[i + 1] === "\n") i++;
+      row.push(cell); rows.push(row); row = []; cell = "";
+    } else cell += c;
+  }
+  if (cell !== "" || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
 
-          const row = {};
-          headers.forEach((header, index) => {
-            row[header] = cleanValues[index] || "";
-          });
+// Sheet has ONE ROW PER SIZE. This groups rows into one card per item.
+function parseCSV(csvText) {
+  const rows = parseCSVRows(csvText);
+  if (rows.length < 2) return [];
 
-          // Parse dynamic sizes and prices from standard columns
-          const sizes = [];
+  const headers = rows[0].map((h) => h.trim().toLowerCase().replace(/[^a-z0-9]/g, ""));
+  const grouped = new Map();
 
-          if (row.price) {
-            sizes.push({
-              label: row.sizelabel || row.size || "Standard",
-              price: parseFloat(row.price.replace(/[^0-9.]/g, "")) || 0,
-            });
-          }
-          if (row.price2) {
-            sizes.push({
-              label: row.sizelabel2 || row.size2 || "Medium",
-              price: parseFloat(row.price2.replace(/[^0-9.]/g, "")) || 0,
-            });
-          }
-          if (row.price3) {
-            sizes.push({
-              label: row.sizelabel3 || row.size3 || "Large",
-              price: parseFloat(row.price3.replace(/[^0-9.]/g, "")) || 0,
-            });
-          }
-          if (row.price4) {
-            sizes.push({
-              label: row.sizelabel4 || row.size4 || "Extra Large",
-              price: parseFloat(row.price4.replace(/[^0-9.]/g, "")) || 0,
-            });
-          }
+  rows.slice(1).forEach((cells) => {
+    const r = {};
+    headers.forEach((h, i) => (r[h] = (cells[i] || "").trim()));
 
-          return {
-            id: row.id || `item_${idx}`,
-            category: row.category
-              ? row.category.toLowerCase().replace(/\s+/g, "-")
-              : "all",
-            name: row.name || row.itemname || "Unnamed Dish",
-            desc: row.desc || row.description || "",
-            sizes: sizes.length > 0 ? sizes : [{ label: "Portion", price: 0 }],
-          };
-        });
-      }
+    if (!r.item || !r.category) return;                    // skip blank rows
+    if ((r.available || "yes").toLowerCase() === "no") return; // hidden items
+
+    const price = parseFloat((r.price || "").replace(/[^0-9.]/g, ""));
+    if (!price) return;
+
+    const catKey = r.category.toLowerCase();
+    const catId = CATEGORY_MAP[catKey] || catKey.replace(/[^a-z0-9]+/g, "-");
+    const key = catId + "|" + r.item.toLowerCase();
+
+    if (!grouped.has(key)) {
+      grouped.set(key, {
+        id: "item_" + grouped.size,   // safe id (no quotes/spaces for onclick)
+        category: catId,
+        name: r.item,
+        desc: [r.description, r.notes].filter(Boolean).join(" • "),
+        sizes: [],
+      });
+    }
+    grouped.get(key).sizes.push({ label: r.size || "Standard", price });
+  });
+
+  // Show "All Items" in the same order as your category tabs
+  const order = categories.map((c) => c.id);
+  const rank = (id) => (order.indexOf(id) === -1 ? 99 : order.indexOf(id));
+  return [...grouped.values()].sort((a, b) => rank(a.category) - rank(b.category));
+}
 
       // Fetch Items Live from Google Sheets CSV
       async function fetchMenuFromSheets() {
