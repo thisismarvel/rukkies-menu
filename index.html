@@ -1,655 +1,1639 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rukkie's Meals and Treats | Digital Menu</title>
-  
-  <!-- Favicon setup -->
-  <link rel="icon" type="image/png" href="./logo.png" />
-  <link rel="apple-touch-icon" href="./logo.png" />
-
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              700: '#800000',
-              800: '#5c0000',
-              900: '#3d0000',
-              gold: '#D4AF37',
-              orange: '#E65100',
-              lightBg: '#FDFBF7'
-            }
-          }
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rukkie's Meals and Treats | Digital Menu & Order</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: "#fff7ed",
+                100: "#ffedd5",
+                500: "#ea580c",
+                600: "#c2410c",
+                800: "#9a3412",
+                900: "#7c2d12",
+                dark: "#451a03",
+                accent: "#f59e0b",
+                deep: "#881337",
+              },
+            },
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+              serif: ["Playfair Display", "serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+      }
+      .active-tab {
+        background-color: #ea580c !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0);
         }
       }
-    }
-  </script>
-
-  <!-- FontAwesome Icons & Google Fonts -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #FDFBF7;
-    }
-    h1, h2, h3, .font-serif {
-      font-family: 'Playfair Display', serif;
-    }
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-  </style>
-</head>
-<body class="text-gray-800 antialiased pb-28">
-
-  <!-- TOP HEADER -->
-  <header class="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 text-white sticky top-0 z-30 shadow-md">
-    <div class="max-w-4xl mx-auto px-3 py-2.5">
-      
-      <!-- Logo, Title & Direct Contact -->
-      <div class="flex items-center justify-between gap-2 mb-2">
-        <div class="flex items-center gap-2.5 min-w-0">
-          <img 
-            src="./logo.png" 
-            alt="Rukkie's Logo" 
-            class="w-10 h-10 rounded-full border border-brand-gold/50 object-cover bg-white flex-shrink-0 shadow-sm"
-            onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=120&q=80';"
-          />
-          <div class="truncate">
-            <h1 class="text-base sm:text-lg font-bold text-amber-200 leading-tight truncate">Rukkie's Meals & Treats</h1>
-            <p class="text-[10px] sm:text-xs text-amber-100/80 truncate">Combos, Bowls, Soups, Stews & Platters</p>
+      .animate-slide-up {
+        animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-orange-50/40 text-slate-800 font-sans min-h-screen pb-28 antialiased"
+  >
+    <!-- Header / Brand Section -->
+    <header
+      class="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-deep text-white sticky top-0 z-30 shadow-xl"
+    >
+      <div class="max-w-5xl mx-auto px-4 py-4 sm:py-6">
+        <div
+          class="flex flex-col sm:flex-row items-center justify-between gap-4"
+        >
+          <div class="flex items-center gap-3 text-center sm:text-left">
+            <div
+              class="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-3xl shadow-inner border border-white/20 shrink-0"
+            >
+              🍲
+            </div>
+            <div>
+              <h1
+                class="text-2xl sm:text-3xl font-extrabold tracking-tight font-serif text-amber-300"
+              >
+                Rukkie's Meals and Treats
+              </h1>
+              <p class="text-xs sm:text-sm text-orange-200 font-medium">
+                Easy Fix Combos, Bowls, Soups, Stews & Platters
+              </p>
+            </div>
+          </div>
+          <!-- Contact info pills -->
+          <div
+            class="flex flex-wrap items-center justify-center sm:justify-end gap-2 text-xs"
+          >
+            <span
+              class="bg-black/25 px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-1.5"
+            >
+              <i class="fa-solid fa-location-dot text-amber-400"></i>
+              Igando, Lagos
+            </span>
+            <span
+              class="bg-black/25 px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-1.5"
+            >
+              <i class="fa-solid fa-truck-fast text-amber-400"></i>
+              Delivery Anywhere Lagos
+            </span>
+            <a
+              href="https://wa.me/2348100385700"
+              target="_blank"
+              class="bg-emerald-600 hover:bg-emerald-500 transition px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5"
+            >
+              <i class="fa-brands fa-whatsapp"></i>
+              08100385700
+            </a>
           </div>
         </div>
 
-        <div class="flex items-center gap-1.5 flex-shrink-0 text-[11px] font-medium">
-          <span class="hidden sm:inline-flex items-center gap-1 bg-white/10 px-2 py-0.5 rounded-full text-amber-100">
-            <i class="fa-solid fa-location-dot text-amber-300"></i> Igando, Lagos
-          </span>
-          <a href="https://wa.me/2348100385700" target="_blank" class="inline-flex items-center gap-1 bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded-full shadow-sm transition">
-            <i class="fa-brands fa-whatsapp text-xs"></i> 
-            <span class="text-xs font-semibold">08100385700</span>
-          </a>
+        <!-- Search Bar -->
+        <div class="mt-4 relative">
+          <i
+            class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-orange-300"
+          ></i>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search delicious meals, soups, rice, combo deals..."
+            class="w-full pl-11 pr-10 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-orange-200 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white/20 transition"
+          />
+          <button
+            id="clearSearch"
+            class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-orange-200 hover:text-white p-1"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
       </div>
 
-      <!-- Compact Search Bar -->
-      <div class="relative">
-        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-        <input 
-          type="text" 
-          id="searchInput" 
-          placeholder="Search meals, soups, rice, combos..." 
-          class="w-full bg-white/10 text-white placeholder-amber-100/60 pl-8 pr-8 py-1.5 rounded-lg text-xs border border-amber-200/20 focus:outline-none focus:bg-white/20 transition"
-          oninput="handleSearch()"
-        />
-        <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-white text-xs">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <!-- Categories Pills Row -->
-      <nav id="categoryNav" class="flex gap-1.5 overflow-x-auto no-scrollbar pt-2 pb-0.5 text-xs font-medium">
-        <!-- Dynamic Category Pills Rendered via JS -->
-      </nav>
-    </div>
-  </header>
-
-  <!-- BANNER NOTIFICATION -->
-  <div class="max-w-4xl mx-auto px-3 mt-3">
-    <div class="bg-amber-50 border border-amber-200/80 rounded-xl p-2.5 text-xs text-amber-900 flex items-start gap-2 shadow-sm">
-      <i class="fa-solid fa-circle-info text-amber-600 text-sm mt-0.5 flex-shrink-0"></i>
-      <p class="leading-relaxed">
-        <strong>Order Info:</strong> Combos & Bowl sizes measured in Litres (L). Swallows have a minimum of 10 pieces. Delivery available anywhere within Lagos.
-      </p>
-    </div>
-  </div>
-
-  <!-- MENU CONTENT CONTAINER -->
-  <main class="max-w-4xl mx-auto px-3 py-4 space-y-6" id="menuContainer">
-    <!-- Menu Sections & Items dynamically loaded -->
-  </main>
-
-  <!-- EMPTY SEARCH RESULT STATE -->
-  <div id="noResults" class="hidden text-center py-12 px-4 max-w-4xl mx-auto">
-    <div class="w-12 h-12 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center mx-auto mb-2 text-lg">
-      <i class="fa-solid fa-utensils"></i>
-    </div>
-    <h3 class="text-sm font-bold text-gray-800">No dishes found</h3>
-    <p class="text-xs text-gray-500 mt-1">Try searching for another dish or choose a different category.</p>
-  </div>
-
-  <!-- FLOATING BOTTOM CART BAR -->
-  <div id="floatingCartBar" class="fixed bottom-3 left-3 right-3 max-w-md mx-auto z-40 transform translate-y-28 transition-transform duration-300 ease-in-out">
-    <div class="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 text-white rounded-2xl p-3 shadow-xl flex items-center justify-between border border-amber-400/30">
-      <div class="flex items-center gap-3">
-        <div class="relative bg-amber-500/20 p-2 rounded-xl text-amber-300">
-          <i class="fa-solid fa-bag-shopping text-xl"></i>
-          <span id="cartBadgeCount" class="absolute -top-1.5 -right-1.5 bg-amber-500 text-black text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-brand-900">0</span>
+      <!-- Category Navigation Bar -->
+      <div class="bg-brand- dark/40 border-t border-white/10 backdrop-blur-md">
+        <div
+          class="max-w-5xl mx-auto px-4 py-2.5 overflow-x-auto hide-scrollbar flex items-center gap-2"
+          id="categoryContainer"
+        >
+          <!-- Categories rendered dynamically via JS -->
         </div>
+      </div>
+    </header>
+
+    <!-- Main Menu Area -->
+    <main class="max-w-5xl mx-auto px-4 py-6">
+      <!-- Notice Banner -->
+      <div
+        class="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 text-xs sm:text-sm flex items-start gap-3 shadow-sm"
+      >
+        <i class="fa-solid fa-circle-info text-brand-600 text-lg mt-0.5"></i>
         <div>
-          <p class="text-[10px] text-amber-200/80 font-medium">Order Total</p>
-          <p id="cartTotalAmount" class="text-base font-bold text-amber-300 leading-tight">₦0</p>
+          <span class="font-bold">Order Info:</span>
+          <span class="text-slate-700">
+            Combos & Bowl sizes measured in Litres (L). Swallows have a minimum
+            of 10 pieces. Seafood options incur extra charges where
+            applicable.</span
+          >
         </div>
       </div>
 
-      <button onclick="openCartDrawer()" class="bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs px-4 py-2.5 rounded-xl shadow transition flex items-center gap-1.5">
-        View Cart <i class="fa-solid fa-arrow-right text-[10px]"></i>
+      <!-- Category Title & Counter -->
+      <div class="flex items-center justify-between mb-4">
+        <h2
+          id="currentCategoryTitle"
+          class="text-xl sm:text-2xl font-bold text-slate-900 font-serif"
+        >
+          All Items
+        </h2>
+        <span
+          id="itemCountBadge"
+          class="text-xs font-semibold px-2.5 py-1 bg-brand-100 text-brand-800 rounded-full"
+          >0 items</span
+        >
+      </div>
+
+      <!-- Menu Items Grid -->
+      <div id="menuGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Dynamic Menu Cards Rendered Here -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="hidden text-center py-12 px-4">
+        <div
+          class="w-20 h-20 bg-orange-100 text-brand-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-3"
+        >
+          <i class="fa-solid fa-utensils"></i>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800">No items found</h3>
+        <p class="text-slate-500 text-sm mt-1">
+          Try adjusting your search terms or select another category.
+        </p>
+      </div>
+    </main>
+
+    <!-- Floating Bottom Cart Bar -->
+    <div
+      id="floatingCartBar"
+      class="fixed bottom-4 left-4 right-4 max-w-xl mx-auto z-40 transform translate-y-32 transition-transform duration-300"
+    >
+      <button
+        onclick="toggleCartModal(true)"
+        class="w-full bg-gradient-to-r from-brand-600 to-amber-600 text-white p-4 rounded-2xl shadow-2xl flex items-center justify-between font-bold text-base hover:opacity-95 transition border border-white/20 active:scale-95"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="relative bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center"
+          >
+            <i class="fa-solid fa-basket-shopping text-xl"></i>
+            <span
+              id="cartBadge"
+              class="absolute -top-2 -right-2 bg-white text-brand-800 text-xs font-black w-5 h-5 rounded-full flex items-center justify-center shadow"
+              >0</span
+            >
+          </div>
+          <div class="text-left">
+            <p class="text-xs text-orange-100 font-normal">
+              View Order Summary
+            </p>
+            <p id="cartBarTotal" class="text-lg leading-tight font-extrabold">
+              ₦0
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex items-center gap-2 bg-black/20 px-4 py-2 rounded-xl text-sm"
+        >
+          <span>View Cart</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </div>
       </button>
     </div>
-  </div>
 
-  <!-- CART & CHECKOUT DRAWER MODAL -->
-  <div id="cartDrawerOverlay" class="fixed inset-0 bg-black/60 z-50 opacity-0 pointer-events-none transition-opacity duration-300 flex justify-end">
-    <div id="cartDrawer" class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out">
-      
-      <!-- Drawer Header -->
-      <div class="bg-gradient-to-r from-brand-900 to-brand-700 text-white p-4 flex items-center justify-between border-b border-brand-800">
-        <div class="flex items-center gap-2">
-          <i class="fa-solid fa-cart-shopping text-amber-300"></i>
-          <h2 class="font-bold text-sm">Your Order Cart</h2>
-        </div>
-        <button onclick="closeCartDrawer()" class="text-gray-300 hover:text-white p-1">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-
-      <!-- Drawer Body -->
-      <div class="flex-1 overflow-y-auto p-4 space-y-4">
-        
-        <!-- Cart Items List -->
-        <div id="cartItemsContainer" class="space-y-2.5">
-          <!-- Rendered dynamically -->
-        </div>
-
-        <!-- Details Form -->
-        <div id="checkoutForm" class="pt-3 border-t border-gray-200 space-y-3">
-          <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-            <i class="fa-solid fa-user-pen text-brand-700"></i> Customer Details
-          </h3>
-
-          <div>
-            <label class="block text-[11px] font-semibold text-gray-700 mb-1">Full Name *</label>
-            <input type="text" id="custName" placeholder="e.g. Bukola Adebayo" class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-brand-700 focus:outline-none" />
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-semibold text-gray-700 mb-1">Phone Number *</label>
-            <input type="tel" id="custPhone" placeholder="e.g. 08012345678" class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-brand-700 focus:outline-none" />
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-semibold text-gray-700 mb-1">Order Type / Address *</label>
-            <select id="custOrderType" onchange="toggleAddressField()" class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-brand-700 focus:outline-none mb-2">
-              <option value="Delivery">Delivery (Anywhere within Lagos)</option>
-              <option value="Pick-up">Pick-up (12 Ade Ogundeinde St, Igando)</option>
-            </select>
-            <textarea id="custAddress" rows="2" placeholder="Enter delivery address in Lagos..." class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-brand-700 focus:outline-none"></textarea>
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-semibold text-gray-700 mb-1">Special Notes (Optional)</label>
-            <textarea id="custNote" rows="2" placeholder="Extra pepper, allergy warnings, preferred delivery time..." class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-brand-700 focus:outline-none"></textarea>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Drawer Footer -->
-      <div class="p-4 bg-gray-50 border-t border-gray-200 space-y-3">
-        <div class="flex justify-between items-center text-sm font-bold text-gray-900">
-          <span>Subtotal Amount:</span>
-          <span id="drawerSubtotal" class="text-brand-700 text-base">₦0</span>
-        </div>
-
-        <button onclick="submitOrderToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2">
-          <i class="fa-brands fa-whatsapp text-base"></i> Send Order via WhatsApp
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- SCRIPT LOGIC -->
-  <script>
-    // Live Google Sheet CSV URL Configuration
-    const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQA1yv_CIuFqa_MjfMf3sRHup8Sj5FXdrBC6vNgqNED7JgZSRKhBslSS2zvqahnn1DmB4isF_C-dL4-/pub?output=csv";
-
-    // Standard Fallback Menu Data
-    const fallbackMenuItems = [
-      { id: "c1", category: "Combo Deals (1L)", title: "1L Spicy Singapore Noodles", description: "Shredded beef, sausage & veggies", prices: { "1L": 16000 }, popular: true, available: true },
-      { id: "c2", category: "Combo Deals (1L)", title: "1L Loaded Native Rice", description: "Snail, ponmo, dried prawn & fish", prices: { "1L": 20000 }, popular: true, available: true },
-      { id: "c3", category: "Combo Deals (1L)", title: "1L Native Pasta", description: "Egg, dried prawn & fish", prices: { "1L": 18000 }, available: true },
-      { id: "c4", category: "Combo Deals (1L)", title: "1L Liver Fried Rice", description: "With 2 mixed protein", prices: { "1L": 28000 }, available: true },
-      { id: "c5", category: "Combo Deals (1L)", title: "1L Tray Jollof Rice", description: "With 2 mixed protein", prices: { "1L": 25000 }, popular: true, available: true },
-      { id: "c6", category: "Combo Deals (1L)", title: "1L Asun Pasta", description: "With 2 mixed protein", prices: { "1L": 32000 }, available: true },
-      { id: "c7", category: "Combo Deals (1L)", title: "Rice & Beans + Iya Risi Sauce", description: "1L rice & beans + 1L sauce", prices: { "1L": 40000 }, available: true },
-      { id: "c8", category: "Combo Deals (1L)", title: "Soup Combo Deal (3 Options)", description: "Efo Riro, Egusi Elefo, Iya Risi, Egusi Ijebu, Okra", prices: { "1L": 70000 }, popular: true, available: true },
-      
-      { id: "r1", category: "Rice & Pasta", title: "Native Rice", description: "Traditional rich palm oil rice with local spices", prices: { "2.5L": 50000, "3.5L": 75000, "5L": 105000, "7L": 130000 }, available: true },
-      { id: "r2", category: "Rice & Pasta", title: "Party/Smokey Jollof Rice", description: "Classic Nigerian firewood style jollof", prices: { "2.5L": 25000, "3.5L": 35000, "5L": 50000, "7L": 75000 }, popular: true, available: true },
-      { id: "r3", category: "Rice & Pasta", title: "Asun Rice", description: "Rice tossed with spicy peppered goat meat bites", prices: { "2.5L": 50000, "3.5L": 75000, "5L": 105000, "7L": 140000 }, popular: true, available: true },
-      
-      { id: "p1", category: "Porridge", title: "Yam Porridge", description: "Richly seasoned soft yam pottage (Asaro)", prices: { "2.5L": 35000, "3.5L": 55000, "5L": 85000, "7L": 120000 }, popular: true, available: true },
-      { id: "p2", category: "Porridge", title: "Ewa Agoyin & Sauce", description: "Mashed beans with dark spicy Agoyin sauce", prices: { "2.5L": 40000, "3.5L": 65000, "5L": 95000, "7L": 130000 }, popular: true, available: true },
-
-      { id: "s1", category: "Soup / Stew / Sauce", title: "Efo Riro", description: "Rich vegetable soup with assorted seasonings", prices: { "2.5L": 45000, "3.5L": 60000, "5L": 85000, "7L": 110000 }, popular: true, available: true },
-      { id: "s2", category: "Soup / Stew / Sauce", title: "Ofada Sauce", description: "Spicy bleached palm oil pepper sauce with locust beans", prices: { "2.5L": 55000, "3.5L": 70000, "5L": 90000, "7L": 120000 }, popular: true, available: true },
-      { id: "s3", category: "Soup / Stew / Sauce", title: "Iya Risi Stew", description: "Signature rich Bukka style free pepper stew", prices: { "2.5L": 50000, "3.5L": 70000, "5L": 110000, "7L": 130000 }, popular: true, available: true },
-
-      { id: "sw1", category: "Swallow", title: "Pounded Yam", description: "Minimum order: 10pcs", prices: { "Per Piece": 2000 }, popular: true, available: true },
-      { id: "sw2", category: "Swallow", title: "Eba", description: "Minimum order: 10pcs", prices: { "Per Piece": 1000 }, available: true },
-
-      { id: "pr1", category: "Protein", title: "Peppered Chicken", description: "Spicy peppered fried chicken platter", prices: { "Small": 32000, "Medium": 62000, "Large": 133000 }, popular: true, available: true },
-      { id: "pr2", category: "Protein", title: "Peppered Turkey", description: "Golden peppered fried turkey platter", prices: { "Small": 38000, "Medium": 74000, "Large": 158000 }, popular: true, available: true },
-      { id: "pr3", category: "Protein", title: "Peppered Goat Meat", description: "Tender spicy goat meat chunks", prices: { "Small": 26000, "Medium": 50000, "Large": 105000 }, available: true }
-    ];
-
-    let menuData = [];
-    let cart = {};
-    let activeCategory = "All Items";
-
-    async function loadMenuData() {
-      try {
-        const response = await fetch(GOOGLE_SHEET_CSV_URL);
-        if(!response.ok) throw new Error("CSV Fetch failed");
-        const csvText = await response.text();
-        const parsedData = parseCSV(csvText);
-        if(parsedData && parsedData.length > 0) {
-          menuData = parsedData;
-        } else {
-          menuData = fallbackMenuItems;
-        }
-      } catch (err) {
-        console.warn("Using fallback menu data due to sheet fetch error:", err);
-        menuData = fallbackMenuItems;
-      }
-      renderCategoryPills();
-      renderMenu();
-    }
-
-    function parseCSV(text) {
-      const lines = text.split('\n').filter(l => l.trim() !== '');
-      if(lines.length < 2) return null;
-      
-      const items = [];
-      for(let i = 1; i < lines.length; i++) {
-        const row = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || lines[i].split(',');
-        if(!row || row.length < 4) continue;
-        
-        const cleanRow = row.map(cell => cell.trim().replace(/^"|"$/g, '').replace(/""/g, '"'));
-        
-        let item = {
-          id: cleanRow[0] || 'item-' + i,
-          category: cleanRow[1] || 'General',
-          title: cleanRow[2] || 'Untitled Dish',
-          description: cleanRow[3] || '',
-          prices: {},
-          image: cleanRow[5] || '',
-          popular: cleanRow[6] === 'true',
-          available: cleanRow[7] !== 'false'
-        };
-
-        try {
-          item.prices = JSON.parse(cleanRow[4]);
-        } catch(e) {
-          item.prices = { "Standard": 1000 };
-        }
-
-        items.push(item);
-      }
-      return items;
-    }
-
-    function getCategories() {
-      const cats = ["All Items"];
-      menuData.forEach(i => {
-        if(i.category && !cats.includes(i.category)) cats.push(i.category);
-      });
-      return cats;
-    }
-
-    function renderCategoryPills() {
-      const nav = document.getElementById("categoryNav");
-      const cats = getCategories();
-      nav.innerHTML = cats.map(cat => {
-        const isActive = cat === activeCategory;
-        return `
-          <button 
-            onclick="setCategory('${cat.replace(/'/g, "\\'")}')"
-            class="px-3 py-1 rounded-full whitespace-nowrap transition text-xs font-semibold flex-shrink-0 ${
-              isActive 
-                ? 'bg-amber-400 text-black shadow-sm' 
-                : 'bg-white/10 text-amber-100 hover:bg-white/20'
-            }"
-          >
-            ${cat}
-          </button>
-        `;
-      }).join('');
-    }
-
-    function setCategory(cat) {
-      activeCategory = cat;
-      renderCategoryPills();
-      renderMenu();
-    }
-
-    function renderMenu() {
-      const container = document.getElementById("menuContainer");
-      const query = document.getElementById("searchInput").value.toLowerCase().trim();
-      const noResults = document.getElementById("noResults");
-
-      let filtered = menuData.filter(i => {
-        const matchCat = activeCategory === "All Items" || i.category === activeCategory;
-        const matchSearch = i.title.toLowerCase().includes(query) || i.description.toLowerCase().includes(query);
-        return matchCat && matchSearch;
-      });
-
-      if(filtered.length === 0) {
-        container.innerHTML = "";
-        noResults.classList.remove("hidden");
-        return;
-      } else {
-        noResults.classList.add("hidden");
-      }
-
-      let html = "";
-      const categoriesToRender = activeCategory === "All Items" ? getCategories().filter(c => c !== "All Items") : [activeCategory];
-
-      categoriesToRender.forEach(cat => {
-        const catItems = filtered.filter(i => i.category === cat);
-        if(catItems.length === 0) return;
-
-        html += `
-          <section class="space-y-3">
-            <div class="flex items-center justify-between border-b border-amber-200/60 pb-1.5">
-              <h2 class="text-base font-bold text-brand-900">${cat}</h2>
-              <span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full font-medium">${catItems.length} items</span>
+    <!-- Cart & Checkout Modal -->
+    <div
+      id="cartModal"
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300 flex justify-end"
+    >
+      <div
+        class="bg-white w-full max-w-lg h-full flex flex-col shadow-2xl animate-slide-up sm:animate-none"
+      >
+        <!-- Modal Header -->
+        <div
+          class="bg-brand-900 text-white p-4 sm:p-5 flex items-center justify-between shrink-0"
+        >
+          <div class="flex items-center gap-3">
+            <div
+              class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-xl"
+            >
+              🛒
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              ${catItems.map(item => renderFoodCard(item)).join('')}
-            </div>
-          </section>
-        `;
-      });
-
-      container.innerHTML = html;
-    }
-
-    function renderFoodCard(item) {
-      const sizes = Object.keys(item.prices);
-      const defaultSize = sizes[0];
-      const defaultPrice = item.prices[defaultSize];
-
-      return `
-        <div class="bg-white rounded-xl p-3 shadow-sm border border-amber-100/80 flex flex-col justify-between space-y-2.5">
-          <div>
-            <div class="flex items-start justify-between gap-2">
-              <div>
-                <div class="flex items-center gap-1.5 flex-wrap">
-                  <h3 class="font-bold text-sm text-gray-900">${item.title}</h3>
-                  ${item.popular ? '<span class="bg-red-100 text-red-700 text-[9px] font-bold px-1.5 py-0.2 rounded">POPULAR</span>' : ''}
-                </div>
-                ${item.description ? `<p class="text-xs text-gray-500 mt-0.5 leading-relaxed">${item.description}</p>` : ''}
-              </div>
-            </div>
-          </div>
-
-          <div class="pt-2 border-t border-gray-100 space-y-2">
             <div>
-              <label class="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Select Size / Portion:</label>
-              <div class="flex flex-wrap gap-1" id="size-options-${item.id}">
-                ${sizes.map((sz, idx) => `
-                  <button 
-                    type="button"
-                    onclick="selectSize('${item.id}', '${sz}',${item.prices[sz]}, this)"
-                    class="size-btn-${item.id} text-xs px-2.5 py-1 rounded-md font-semibold border transition${
-                      idx === 0 
-                        ? 'bg-brand-700 text-white border-brand-700' 
-                        : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
-                    }"
-                    data-size="${sz}"
-                    data-price="${item.prices[sz]}"
-                  >
-                    ${sz}
-                  </button>
-                `).join('')}
-              </div>
+              <h3 class="font-bold text-lg font-serif">Your Order Cart</h3>
+              <p class="text-xs text-orange-200">Rukkie's Meals and Treats</p>
             </div>
+          </div>
+          <button
+            onclick="toggleCartModal(false)"
+            class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition"
+          >
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
 
-            <div class="flex items-center justify-between pt-1">
+        <!-- Modal Content (Scrollable) -->
+        <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-6">
+          <!-- Cart Items List -->
+          <div>
+            <h4
+              class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3"
+            >
+              Selected Items
+            </h4>
+            <div id="cartItemsList" class="space-y-3">
+              <!-- Dynamic Cart Rows -->
+            </div>
+            <div
+              id="emptyCartMessage"
+              class="hidden text-center py-8 text-slate-400"
+            >
+              <i
+                class="fa-solid fa-cart-flatbed text-4xl mb-2 text-slate-300"
+              ></i>
+              <p class="text-sm">Your order list is currently empty.</p>
+            </div>
+          </div>
+
+          <!-- Customer Details Form -->
+          <div class="border-t border-slate-100 pt-5">
+            <h4
+              class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3"
+            >
+              Your Details for Delivery / Pickup
+            </h4>
+
+            <form
+              id="checkoutForm"
+              onsubmit="handleFormSubmit(event)"
+              class="space-y-3.5"
+            >
               <div>
-                <span class="text-[10px] text-gray-400 block font-medium">Price</span>
-                <span id="price-display-${item.id}" class="text-sm font-extrabold text-brand-900">
-                  ₦${defaultPrice.toLocaleString()}
-                </span>
+                <label class="block text-xs font-semibold text-slate-700 mb-1"
+                  >Full Name <span class="text-red-500">*</span></label
+                >
+                <input
+                  type="text"
+                  id="custName"
+                  required
+                  placeholder="e.g. Chisom Adebayo"
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition"
+                />
               </div>
 
-              <button 
-                onclick="addToCartFromCard('${item.id}')"
-                class="bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs px-3 py-1.5 rounded-lg shadow-sm transition flex items-center gap-1"
-              >
-                <i class="fa-solid fa-plus text-[10px]"></i> Add
-              </button>
-            </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1"
+                  >Phone Number <span class="text-red-500">*</span></label
+                >
+                <input
+                  type="tel"
+                  id="custPhone"
+                  required
+                  placeholder="e.g. 08012345678"
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1"
+                  >Fulfilment Method</label
+                >
+                <div class="grid grid-cols-2 gap-2">
+                  <label
+                    class="border border-slate-200 rounded-xl p-3 flex items-center gap-2 cursor-pointer has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50/50 transition"
+                  >
+                    <input
+                      type="radio"
+                      name="fulfilment"
+                      value="Delivery"
+                      checked
+                      onchange="toggleAddressVisibility(true)"
+                      class="accent-brand-600"
+                    />
+                    <div>
+                      <p class="text-xs font-bold text-slate-800">Delivery</p>
+                      <p class="text-[10px] text-slate-500">
+                        Anywhere in Lagos
+                      </p>
+                    </div>
+                  </label>
+                  <label
+                    class="border border-slate-200 rounded-xl p-3 flex items-center gap-2 cursor-pointer has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50/50 transition"
+                  >
+                    <input
+                      type="radio"
+                      name="fulfilment"
+                      value="Pick-up"
+                      onchange="toggleAddressVisibility(false)"
+                      class="accent-brand-600"
+                    />
+                    <div>
+                      <p class="text-xs font-bold text-slate-800">Pick-up</p>
+                      <p class="text-[10px] text-slate-500">Igando, Lagos</p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div id="addressGroup">
+                <label class="block text-xs font-semibold text-slate-700 mb-1"
+                  >Delivery Address / Location
+                  <span class="text-red-500">*</span></label
+                >
+                <textarea
+                  id="custAddress"
+                  rows="2"
+                  required
+                  placeholder="Enter full delivery address in Lagos..."
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition"
+                ></textarea>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1"
+                  >Additional Note / Instructions
+                  <span class="text-slate-400 font-normal"
+                    >(Optional)</span
+                  ></label
+                >
+                <textarea
+                  id="custNote"
+                  rows="2"
+                  placeholder="e.g. Extra spicy, call upon arrival, etc."
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition"
+                ></textarea>
+              </div>
+            </form>
           </div>
         </div>
-      `;
-    }
 
-    function selectSize(itemId, size, price, btnEl) {
-      const parent = document.getElementById(`size-options-${itemId}`);
-      const buttons = parent.querySelectorAll(`.size-btn-${itemId}`);
-      
-      buttons.forEach(b => {
-        b.classList.remove('bg-brand-700', 'text-white', 'border-brand-700');
-        b.classList.add('bg-gray-50', 'text-gray-700', 'border-gray-200');
-      });
-
-      btnEl.classList.remove('bg-gray-50', 'text-gray-700', 'border-gray-200');
-      btnEl.classList.add('bg-brand-700', 'text-white', 'border-brand-700');
-
-      document.getElementById(`price-display-${itemId}`).innerText = `₦${price.toLocaleString()}`;
-    }
-
-    function addToCartFromCard(itemId) {
-      const item = menuData.find(i => i.id === itemId);
-      if(!item) return;
-
-      const sizeContainer = document.getElementById(`size-options-${itemId}`);
-      const activeBtn = sizeContainer.querySelector('.bg-brand-700');
-      
-      const size = activeBtn.getAttribute('data-size');
-      const price = parseInt(activeBtn.getAttribute('data-price'));
-
-      const cartKey = `${itemId}_${size}`;
-
-      if(cart[cartKey]) {
-        cart[cartKey].qty += 1;
-      } else {
-        cart[cartKey] = {
-          id: itemId,
-          title: item.title,
-          size: size,
-          price: price,
-          qty: 1
-        };
-      }
-
-      updateCartUI();
-    }
-
-    function updateCartUI() {
-      const keys = Object.keys(cart);
-      let totalQty = 0;
-      let totalPrice = 0;
-
-      keys.forEach(k => {
-        totalQty += cart[k].qty;
-        totalPrice += (cart[k].price * cart[k].qty);
-      });
-
-      document.getElementById('cartBadgeCount').innerText = totalQty;
-      document.getElementById('cartTotalAmount').innerText = `₦${totalPrice.toLocaleString()}`;
-
-      const bar = document.getElementById('floatingCartBar');
-      if(totalQty > 0) {
-        bar.classList.remove('translate-y-28');
-      } else {
-        bar.classList.add('translate-y-28');
-        closeCartDrawer();
-      }
-
-      renderCartDrawerItems(totalPrice);
-    }
-
-    function renderCartDrawerItems(subtotal) {
-      const container = document.getElementById('cartItemsContainer');
-      document.getElementById('drawerSubtotal').innerText = `₦${subtotal.toLocaleString()}`;
-
-      const keys = Object.keys(cart);
-      if(keys.length === 0) {
-        container.innerHTML = `<p class="text-xs text-gray-400 text-center py-6">Your cart is empty.</p>`;
-        return;
-      }
-
-      container.innerHTML = keys.map(k => {
-        const entry = cart[k];
-        return `
-          <div class="flex items-center justify-between bg-gray-50 p-2.5 rounded-lg border border-gray-200/80">
-            <div class="min-w-0 pr-2">
-              <h4 class="text-xs font-bold text-gray-800 truncate">${entry.title}</h4>
-              <p class="text-[10px] text-gray-500">Size: <span class="font-semibold text-brand-700">${entry.size}</span> @ ₦${entry.price.toLocaleString()}</p>
-            </div>
-
-            <div class="flex items-center gap-2 flex-shrink-0">
-              <div class="flex items-center border border-gray-300 rounded-md bg-white">
-                <button onclick="changeQty('${k}', -1)" class="px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-100">-</button>
-                <span class="px-2 py-0.5 text-xs font-bold text-gray-800">${entry.qty}</span>
-                <button onclick="changeQty('${k}', 1)" class="px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-100">+</button>
-              </div>
-              <span class="text-xs font-extrabold text-gray-900 min-w-[50px] text-right">₦${(entry.price * entry.qty).toLocaleString()}</span>
-            </div>
+        <!-- Modal Footer / Action Button -->
+        <div
+          class="p-4 bg-slate-50 border-t border-slate-200 shrink-0 space-y-3"
+        >
+          <div
+            class="flex items-center justify-between text-slate-700 font-semibold text-sm"
+          >
+            <span>Subtotal</span>
+            <span id="modalSubtotal" class="text-lg font-bold text-brand-800"
+              >₦0</span
+            >
           </div>
-        `;
-      }).join('');
-    }
+          <button
+            onclick="sendOrderToWhatsApp()"
+            id="whatsappBtn"
+            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 px-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg hover:shadow-emerald-600/30 transition active:scale-98"
+          >
+            <i class="fa-brands fa-whatsapp text-xl"></i>
+            <span>Send Order via WhatsApp</span>
+          </button>
+        </div>
+      </div>
+    </div>
 
-    function changeQty(key, delta) {
-      if(cart[key]) {
-        cart[key].qty += delta;
-        if(cart[key].qty <= 0) {
-          delete cart[key];
+    <script>
+      // Data Store
+      const categories = [
+        { id: "all", name: "All Items", icon: "fa-utensils" },
+        { id: "combo", name: "Combo Deals (1L)", icon: "fa-fire" },
+        { id: "rice-pasta", name: "Rice & Pasta", icon: "fa-bowl-rice" },
+        { id: "porridge", name: "Porridge", icon: "fa-wheat-awn" },
+        { id: "soups", name: "Soups, Stews & Sauces", icon: "fa-bowl-hot" },
+        { id: "swallow", name: "Swallow", icon: "fa-bread-slice" },
+        { id: "protein", name: "Protein Platters", icon: "fa-drumstick-bite" },
+      ];
+
+      const menuItems = [
+        // COMBO DEALS (1L)
+        {
+          id: "c1",
+          category: "combo",
+          name: "1L Spicy Singapore Noodles",
+          desc: "Shredded beef, sausage & veggies",
+          sizes: [{ label: "1L", price: 16000 }],
+        },
+        {
+          id: "c2",
+          category: "combo",
+          name: "1L Loaded Native Rice",
+          desc: "Snail, ponmo, dried prawn & fish",
+          sizes: [{ label: "1L", price: 20000 }],
+        },
+        {
+          id: "c3",
+          category: "combo",
+          name: "1L Native Pasta",
+          desc: "Egg, dried prawn & fish",
+          sizes: [{ label: "1L", price: 18000 }],
+        },
+        {
+          id: "c4",
+          category: "combo",
+          name: "1L Liver Fried Rice",
+          desc: "With 2 mixed protein",
+          sizes: [{ label: "1L", price: 28000 }],
+        },
+        {
+          id: "c5",
+          category: "combo",
+          name: "1L Tray Jollof Rice",
+          desc: "With 2 mixed protein",
+          sizes: [{ label: "1L", price: 25000 }],
+        },
+        {
+          id: "c6",
+          category: "combo",
+          name: "1L Asun Pasta",
+          desc: "With 2 mixed protein",
+          sizes: [{ label: "1L", price: 32000 }],
+        },
+        {
+          id: "c7",
+          category: "combo",
+          name: "Rice & Beans + Iya Risi Sauce",
+          desc: "1L rice & beans + 1L sauce",
+          sizes: [{ label: "1L + 1L", price: 40000 }],
+        },
+        {
+          id: "c8",
+          category: "combo",
+          name: "Soup Combo Deal (3 Options)",
+          desc: "Efo Riro, Egusi Elefo, Iya Risi, Egusi Ijebu, Okra",
+          sizes: [{ label: "1 Combo", price: 70000 }],
+        },
+
+        // RICE & PASTA
+        {
+          id: "rp1",
+          category: "rice-pasta",
+          name: "Native Rice",
+          desc: "Traditional rich palm oil rice with local spices",
+          sizes: [
+            { label: "2.5L", price: 50000 },
+            { label: "3.5L", price: 75000 },
+            { label: "5L", price: 105000 },
+            { label: "7L", price: 130000 },
+          ],
+        },
+        {
+          id: "rp2",
+          category: "rice-pasta",
+          name: "Loaded Jollof Rice",
+          desc: "Richly garnised smoky party jollof rice",
+          sizes: [
+            { label: "2.5L", price: 45000 },
+            { label: "3.5L", price: 70000 },
+            { label: "5L", price: 90000 },
+            { label: "7L", price: 115000 },
+          ],
+        },
+        {
+          id: "rp3",
+          category: "rice-pasta",
+          name: "Caribbean Rice",
+          desc: "Flavorful spiced rice with tropical veggies",
+          sizes: [
+            { label: "2.5L", price: 50000 },
+            { label: "3.5L", price: 75000 },
+            { label: "5L", price: 105000 },
+            { label: "7L", price: 140000 },
+          ],
+        },
+        {
+          id: "rp4",
+          category: "rice-pasta",
+          name: "Coconut Rice",
+          desc: "Fragrant coconut milk infused rice",
+          sizes: [
+            { label: "2.5L", price: 50000 },
+            { label: "3.5L", price: 75000 },
+            { label: "5L", price: 105000 },
+            { label: "7L", price: 140000 },
+          ],
+        },
+        {
+          id: "rp5",
+          category: "rice-pasta",
+          name: "Native Pasta",
+          desc: "Local style seasoned pasta mix",
+          sizes: [
+            { label: "2.5L", price: 45000 },
+            { label: "3.5L", price: 70000 },
+            { label: "5L", price: 90000 },
+            { label: "7L", price: 115000 },
+          ],
+        },
+        {
+          id: "rp6",
+          category: "rice-pasta",
+          name: "Plain Ofada Rice",
+          desc: "Steamed local unpolished rice",
+          sizes: [
+            { label: "2.5L", price: 20000 },
+            { label: "3.5L", price: 35000 },
+            { label: "5L", price: 55000 },
+            { label: "7L", price: 70000 },
+          ],
+        },
+        {
+          id: "rp7",
+          category: "rice-pasta",
+          name: "Party/Smokey Jollof Rice",
+          desc: "Classic Nigerian firewood style jollof",
+          sizes: [
+            { label: "2.5L", price: 25000 },
+            { label: "3.5L", price: 35000 },
+            { label: "5L", price: 50000 },
+            { label: "7L", price: 75000 },
+          ],
+        },
+        {
+          id: "rp8",
+          category: "rice-pasta",
+          name: "Stir-Fry Pasta",
+          desc: "Sautéed pasta with vibrant vegetables",
+          sizes: [
+            { label: "2.5L", price: 35000 },
+            { label: "3.5L", price: 50000 },
+            { label: "5L", price: 75000 },
+            { label: "7L", price: 100000 },
+          ],
+        },
+        {
+          id: "rp9",
+          category: "rice-pasta",
+          name: "Asun Rice",
+          desc: "Rice tossed with spicy peppered goat meat bites",
+          sizes: [
+            { label: "2.5L", price: 50000 },
+            { label: "3.5L", price: 75000 },
+            { label: "5L", price: 105000 },
+            { label: "7L", price: 140000 },
+          ],
+        },
+        {
+          id: "rp10",
+          category: "rice-pasta",
+          name: "Plain Rice & Beans",
+          desc: "Classic steamed rice and soft beans mix",
+          sizes: [
+            { label: "2.5L", price: 20000 },
+            { label: "3.5L", price: 35000 },
+            { label: "5L", price: 50000 },
+            { label: "7L", price: 75000 },
+          ],
+        },
+        {
+          id: "rp11",
+          category: "rice-pasta",
+          name: "Basmati Fried Rice",
+          desc: "Premium long-grain fried rice with veggies",
+          sizes: [
+            { label: "2.5L", price: 35000 },
+            { label: "3.5L", price: 45000 },
+            { label: "5L", price: 65000 },
+            { label: "7L", price: 90000 },
+          ],
+        },
+        {
+          id: "rp12",
+          category: "rice-pasta",
+          name: "Seafood Rice",
+          desc: "Rich rice dish loaded with fresh seafood",
+          sizes: [
+            { label: "2.5L", price: 50000 },
+            { label: "3.5L", price: 75000 },
+            { label: "5L", price: 115000 },
+            { label: "7L", price: 140000 },
+          ],
+        },
+        {
+          id: "rp13",
+          category: "rice-pasta",
+          name: "Naija Fried Rice",
+          desc: "Homestyle Nigerian savory fried rice",
+          sizes: [
+            { label: "2.5L", price: 28000 },
+            { label: "3.5L", price: 38000 },
+            { label: "5L", price: 68000 },
+            { label: "7L", price: 88000 },
+          ],
+        },
+        {
+          id: "rp14",
+          category: "rice-pasta",
+          name: "Jollof Pasta",
+          desc: "Spicy tomato reduction cooked spaghetti",
+          sizes: [
+            { label: "2.5L", price: 25000 },
+            { label: "3.5L", price: 45000 },
+            { label: "5L", price: 80000 },
+            { label: "7L", price: 100000 },
+          ],
+        },
+        {
+          id: "rp15",
+          category: "rice-pasta",
+          name: "Spicy Singapore Noodles",
+          desc: "Wok-tossed spicy noodles",
+          sizes: [
+            { label: "2.5L", price: 45000 },
+            { label: "3.5L", price: 75000 },
+            { label: "5L", price: 90000 },
+            { label: "7L", price: 120000 },
+          ],
+        },
+
+        // PORRIDGE
+        {
+          id: "po1",
+          category: "porridge",
+          name: "Yam Porridge",
+          desc: "Richly seasoned soft yam pottage (Asaro)",
+          sizes: [
+            { label: "2.5L", price: 35000 },
+            { label: "3.5L", price: 55000 },
+            { label: "5L", price: 85000 },
+            { label: "7L", price: 120000 },
+          ],
+        },
+        {
+          id: "po2",
+          category: "porridge",
+          name: "Ewa Agoyin & Sauce",
+          desc: "Mashed beans with dark spicy Agoyin sauce",
+          sizes: [
+            { label: "2.5L", price: 40000 },
+            { label: "3.5L", price: 65000 },
+            { label: "5L", price: 95000 },
+            { label: "7L", price: 130000 },
+          ],
+        },
+        {
+          id: "po3",
+          category: "porridge",
+          name: "Plantain Porridge",
+          desc: "Savory unripe or ripe plantain porridge",
+          sizes: [
+            { label: "2.5L", price: 45000 },
+            { label: "3.5L", price: 70000 },
+            { label: "5L", price: 105000 },
+            { label: "7L", price: 140000 },
+          ],
+        },
+        {
+          id: "po4",
+          category: "porridge",
+          name: "Beans Porridge",
+          desc: "Classic seasoned Nigerian beans porridge",
+          sizes: [
+            { label: "2.5L", price: 35000 },
+            { label: "3.5L", price: 50000 },
+            { label: "5L", price: 75000 },
+          ],
+        },
+
+        // SOUPS, STEWS & SAUCES
+        {
+          id: "sp1",
+          category: "soups",
+          name: "Efo Riro",
+          desc: "Rich vegetable soup with assorted seasonings",
+          sizes: [
+            { label: "2.5L", price: 45000 },
+            { label: "3.5L", price: 60000 },
+            { label: "5L", price: 85000 },
+            { label: "7L", price: 110000 },
+          ],
+        },
+        {
+          id: "sp2",
+          category: "soups",
+          name: "Okra Soup",
+          desc: "Hearty chopped okra soup",
+          sizes: [
+            { label: "2.5L", price: 45000 },
+            { label: "3.5L", price: 60000 },
+            { label: "5L", price: 85000 },
+            { label: "7L", price: 110000 },
+          ],
+        },
+        {
+          id: "sp3",
+          category: "soups",
+          name: "Ofada Sauce",
+          desc: "Spicy bleached palm oil pepper sauce with locust beans",
+          sizes: [
+            { label: "2.5L", price: 55000 },
+            { label: "3.5L", price: 70000 },
+            { label: "5L", price: 90000 },
+            { label: "7L", price: 120000 },
+          ],
+        },
+        {
+          id: "sp4",
+          category: "soups",
+          name: "Plain Okro",
+          desc: "Lightly seasoned plain draw okra",
+          sizes: [
+            { label: "2.5L", price: 18000 },
+            { label: "3.5L", price: 25000 },
+          ],
+        },
+        {
+          id: "sp5",
+          category: "soups",
+          name: "Egusi Ijebu",
+          desc: "Smooth, un-clustered Ijebu style melon soup",
+          sizes: [
+            { label: "2.5L", price: 45000 },
+            { label: "3.5L", price: 60000 },
+            { label: "5L", price: 85000 },
+            { label: "7L", price: 110000 },
+          ],
+        },
+        {
+          id: "sp6",
+          category: "soups",
+          name: "Ewedu",
+          desc: "Smooth blended jute leaf soup",
+          sizes: [
+            { label: "2.5L", price: 20000 },
+            { label: "3.5L", price: 30000 },
+          ],
+        },
+        {
+          id: "sp7",
+          category: "soups",
+          name: "Cow Tail Stew",
+          desc: "Rich tomato stew cooked with tender cow tail",
+          sizes: [
+            { label: "2.5L", price: 70000 },
+            { label: "3.5L", price: 95000 },
+            { label: "5L", price: 130000 },
+            { label: "7L", price: 160000 },
+          ],
+        },
+        {
+          id: "sp8",
+          category: "soups",
+          name: "Oha Soup",
+          desc: "Traditional Eastern Oha leaf soup",
+          sizes: [
+            { label: "2.5L", price: 50000 },
+            { label: "3.5L", price: 70000 },
+            { label: "5L", price: 96000 },
+            { label: "7L", price: 130000 },
+          ],
+        },
+        {
+          id: "sp9",
+          category: "soups",
+          name: "Egusi Elefo",
+          desc: "Lumpy melon seed soup cooked with spinach/ugwu",
+          sizes: [
+            { label: "2.5L", price: 45000 },
+            { label: "3.5L", price: 60000 },
+            { label: "5L", price: 90000 },
+            { label: "7L", price: 110000 },
+          ],
+        },
+        {
+          id: "sp10",
+          category: "soups",
+          name: "Seafood Okra",
+          desc: "Loaded okra soup with crab, prawns & fish",
+          sizes: [
+            { label: "2.5L", price: 55000 },
+            { label: "3.5L", price: 80000 },
+            { label: "5L", price: 105000 },
+            { label: "7L", price: 140000 },
+          ],
+        },
+        {
+          id: "sp11",
+          category: "soups",
+          name: "Iya Risi Stew",
+          desc: "Signature rich Bukka style fried pepper stew",
+          sizes: [
+            { label: "2.5L", price: 50000 },
+            { label: "3.5L", price: 70000 },
+            { label: "5L", price: 110000 },
+            { label: "7L", price: 130000 },
+          ],
+        },
+        {
+          id: "sp12",
+          category: "soups",
+          name: "Fresh Fish Soup",
+          desc: "Delicate light fresh fish soup",
+          sizes: [
+            { label: "2.5L", price: 50000 },
+            { label: "3.5L", price: 70000 },
+            { label: "5L", price: 96000 },
+            { label: "7L", price: 130000 },
+          ],
+        },
+        {
+          id: "sp13",
+          category: "soups",
+          name: "Ogbono",
+          desc: "Rich draw soup cooked with traditional spices",
+          sizes: [
+            { label: "2.5L", price: 55000 },
+            { label: "3.5L", price: 75000 },
+            { label: "5L", price: 110000 },
+            { label: "7L", price: 140000 },
+          ],
+        },
+        {
+          id: "sp14",
+          category: "soups",
+          name: "Shredded Beef Sauce",
+          desc: "Savoury dark sauce cooked with beef strips",
+          sizes: [
+            { label: "2.5L", price: 60000 },
+            { label: "3.5L", price: 85000 },
+            { label: "5L", price: 125000 },
+            { label: "7L", price: 150000 },
+          ],
+        },
+        {
+          id: "sp15",
+          category: "soups",
+          name: "Goat Meat Stew",
+          desc: "Deeply seasoned goat meat tomato stew",
+          sizes: [
+            { label: "2.5L", price: 55000 },
+            { label: "3.5L", price: 75000 },
+            { label: "5L", price: 110000 },
+            { label: "7L", price: 140000 },
+          ],
+        },
+        {
+          id: "sp16",
+          category: "soups",
+          name: "Chicken in Curry Sauce",
+          desc: "Creamy savory curry chicken sauce",
+          sizes: [
+            { label: "2.5L", price: 60000 },
+            { label: "3.5L", price: 85000 },
+            { label: "5L", price: 125000 },
+            { label: "7L", price: 150000 },
+          ],
+        },
+        {
+          id: "sp17",
+          category: "soups",
+          name: "Chicken Stew",
+          desc: "Classic tomato stew with chicken pieces",
+          sizes: [
+            { label: "2.5L", price: 50000 },
+            { label: "3.5L", price: 70000 },
+            { label: "5L", price: 110000 },
+            { label: "7L", price: 130000 },
+          ],
+        },
+        {
+          id: "sp18",
+          category: "soups",
+          name: "Prawn in Sweet & Sour",
+          desc: "Delicious sweet & tangy prawn sauce",
+          sizes: [
+            { label: "2.5L", price: 70000 },
+            { label: "3.5L", price: 90000 },
+            { label: "5L", price: 130000 },
+            { label: "7L", price: 175000 },
+          ],
+        },
+        {
+          id: "sp19",
+          category: "soups",
+          name: "Live Chicken Stew",
+          desc: "Rich stew cooked with fresh local chicken",
+          sizes: [
+            { label: "2.5L", price: 55000 },
+            { label: "3.5L", price: 75000 },
+            { label: "5L", price: 110000 },
+            { label: "7L", price: 140000 },
+          ],
+        },
+        {
+          id: "sp20",
+          category: "soups",
+          name: "Catfish Pepper Soup",
+          desc: "Spicy herbal catfish soup",
+          sizes: [
+            { label: "2.5L", price: 40000 },
+            { label: "3.5L", price: 55000 },
+            { label: "5L", price: 85000 },
+            { label: "7L", price: 105000 },
+          ],
+        },
+        {
+          id: "sp21",
+          category: "soups",
+          name: "Assorted Stew",
+          desc: "Nigerian tomato stew loaded with mixed meats",
+          sizes: [
+            { label: "2.5L", price: 55000 },
+            { label: "3.5L", price: 75000 },
+            { label: "5L", price: 110000 },
+            { label: "7L", price: 130000 },
+          ],
+        },
+        {
+          id: "sp22",
+          category: "soups",
+          name: "Assorted Pepper Soup",
+          desc: "Spicy pepper soup with varieties of meat",
+          sizes: [
+            { label: "2.5L", price: 50000 },
+            { label: "3.5L", price: 75000 },
+            { label: "5L", price: 95000 },
+            { label: "7L", price: 130000 },
+          ],
+        },
+        {
+          id: "sp23",
+          category: "soups",
+          name: "Cow Leg Stew",
+          desc: "Rich stew with tender gelatinous cow leg pieces",
+          sizes: [
+            { label: "2.5L", price: 70000 },
+            { label: "3.5L", price: 95000 },
+            { label: "5L", price: 130000 },
+            { label: "7L", price: 160000 },
+          ],
+        },
+        {
+          id: "sp24",
+          category: "soups",
+          name: "Chicken Pepper Soup",
+          desc: "Aromatic spicy chicken broth",
+          sizes: [
+            { label: "2.5L", price: 55000 },
+            { label: "3.5L", price: 80000 },
+            { label: "5L", price: 120000 },
+            { label: "7L", price: 140000 },
+          ],
+        },
+        {
+          id: "sp25",
+          category: "soups",
+          name: "White Soup (Ofe Nsala)",
+          desc: "Spicy yam thickened indigenous soup",
+          sizes: [
+            { label: "2.5L", price: 60000 },
+            { label: "3.5L", price: 85000 },
+            { label: "5L", price: 120000 },
+            { label: "7L", price: 150000 },
+          ],
+        },
+        {
+          id: "sp26",
+          category: "soups",
+          name: "Turkey Pepper Soup",
+          desc: "Hot pepper soup with succulent turkey chunks",
+          sizes: [
+            { label: "2.5L", price: 60000 },
+            { label: "3.5L", price: 85000 },
+            { label: "5L", price: 130000 },
+            { label: "7L", price: 170000 },
+          ],
+        },
+        {
+          id: "sp27",
+          category: "soups",
+          name: "Turkey Stew",
+          desc: "Fried turkey stew in savory pepper sauce",
+          sizes: [
+            { label: "2.5L", price: 60000 },
+            { label: "3.5L", price: 85000 },
+            { label: "5L", price: 120000 },
+            { label: "7L", price: 150000 },
+          ],
+        },
+        {
+          id: "sp28",
+          category: "soups",
+          name: "Goat Meat Pepper Soup",
+          desc: "Traditional spicy goat meat pepper soup",
+          sizes: [
+            { label: "2.5L", price: 55000 },
+            { label: "3.5L", price: 80000 },
+            { label: "5L", price: 120000 },
+            { label: "7L", price: 140000 },
+          ],
+        },
+        {
+          id: "sp29",
+          category: "soups",
+          name: "Hake Fish Stew",
+          desc: "Seared hake fish in spicy pepper sauce",
+          sizes: [
+            { label: "2.5L", price: 55000 },
+            { label: "3.5L", price: 70000 },
+            { label: "5L", price: 90000 },
+            { label: "7L", price: 110000 },
+          ],
+        },
+        {
+          id: "sp30",
+          category: "soups",
+          name: "Titus Fish Stew",
+          desc: "Mackerel/Titus fish cooked in rich red stew",
+          sizes: [
+            { label: "2.5L", price: 55000 },
+            { label: "3.5L", price: 70000 },
+            { label: "5L", price: 90000 },
+            { label: "7L", price: 115000 },
+          ],
+        },
+        {
+          id: "sp31",
+          category: "soups",
+          name: "Banga Soup",
+          desc: "Delta palm fruit extract soup with indigenous spices",
+          sizes: [
+            { label: "2.5L", price: 55000 },
+            { label: "3.5L", price: 70000 },
+            { label: "5L", price: 90000 },
+            { label: "7L", price: 115000 },
+          ],
+        },
+        {
+          id: "sp32",
+          category: "soups",
+          name: "Afang Soup",
+          desc: "Calabar style wild spinach & okazi leaf soup",
+          sizes: [
+            { label: "2.5L", price: 55000 },
+            { label: "3.5L", price: 70000 },
+            { label: "5L", price: 90000 },
+            { label: "7L", price: 115000 },
+          ],
+        },
+
+        // SWALLOW
+        {
+          id: "sw1",
+          category: "swallow",
+          name: "Eba",
+          desc: "Cassava meal swallow (Minimum order: 10pcs)",
+          sizes: [{ label: "Per Piece", price: 1000 }],
+        },
+        {
+          id: "sw2",
+          category: "swallow",
+          name: "Fufu",
+          desc: "Smooth cassava fufu (Minimum order: 10pcs)",
+          sizes: [{ label: "Per Piece", price: 1000 }],
+        },
+        {
+          id: "sw3",
+          category: "swallow",
+          name: "Wheat",
+          desc: "Whole wheat swallow (Minimum order: 10pcs)",
+          sizes: [{ label: "Per Piece", price: 1500 }],
+        },
+        {
+          id: "sw4",
+          category: "swallow",
+          name: "Semo",
+          desc: "Smooth semolina swallow (Minimum order: 10pcs)",
+          sizes: [{ label: "Per Piece", price: 1000 }],
+        },
+        {
+          id: "sw5",
+          category: "swallow",
+          name: "Pounded Yam",
+          desc: "Poundo yam swallow (Minimum order: 10pcs)",
+          sizes: [{ label: "Per Piece", price: 2000 }],
+        },
+
+        // PROTEIN - TRAYS & PLATTERS
+        {
+          id: "pr1",
+          category: "protein",
+          name: "Peppered Chicken",
+          desc: "Spicy peppered fried chicken platter",
+          sizes: [
+            { label: "Small", price: 32000 },
+            { label: "Med", price: 62000 },
+            { label: "Large", price: 133000 },
+          ],
+        },
+        {
+          id: "pr2",
+          category: "protein",
+          name: "Peppered Turkey",
+          desc: "Golden peppered fried turkey platter",
+          sizes: [
+            { label: "Small", price: 38000 },
+            { label: "Med", price: 74000 },
+            { label: "Large", price: 158000 },
+          ],
+        },
+        {
+          id: "pr3",
+          category: "protein",
+          name: "Peppered Goat Meat",
+          desc: "Tender spicy goat meat chunks",
+          sizes: [
+            { label: "Small", price: 26000 },
+            { label: "Med", price: 50000 },
+            { label: "Large", price: 105000 },
+          ],
+        },
+        {
+          id: "pr4",
+          category: "protein",
+          name: "Peppered Ram Meat",
+          desc: "Savory peppered ram meat platter",
+          sizes: [
+            { label: "Small", price: 32000 },
+            { label: "Med", price: 62000 },
+            { label: "Large", price: 133000 },
+          ],
+        },
+        {
+          id: "pr5",
+          category: "protein",
+          name: "Peppered Hake Fish",
+          desc: "Crispy fried peppered hake fish cutlets",
+          sizes: [
+            { label: "Small", price: 23000 },
+            { label: "Med", price: 44000 },
+            { label: "Large", price: 87000 },
+          ],
+        },
+        {
+          id: "pr6",
+          category: "protein",
+          name: "Peppered Croaker Fish",
+          desc: "Juicy croaker fish in pepper sauce",
+          sizes: [
+            { label: "Small", price: 26000 },
+            { label: "Med", price: 50000 },
+            { label: "Large", price: 105000 },
+          ],
+        },
+        {
+          id: "pr7",
+          category: "protein",
+          name: "Peppered Snail",
+          desc: "Jumbo peppered snails platter",
+          sizes: [
+            { label: "Small", price: 25000 },
+            { label: "Med", price: 50000 },
+            { label: "Large", price: 105000 },
+          ],
+        },
+        {
+          id: "pr8",
+          category: "protein",
+          name: "Peppered Beef",
+          desc: "Savory seasoned peppered beef bites",
+          sizes: [
+            { label: "Small", price: 26000 },
+            { label: "Med", price: 50000 },
+            { label: "Large", price: 105000 },
+          ],
+        },
+        {
+          id: "pr9",
+          category: "protein",
+          name: "Mixed Protein Platter",
+          desc: "Combination platter of assorted peppered meats",
+          sizes: [
+            { label: "Small", price: 25000 },
+            { label: "Med", price: 50000 },
+            { label: "Large", price: 85000 },
+          ],
+        },
+        {
+          id: "pr10",
+          category: "protein",
+          name: "Moi Moi in Cup",
+          desc: "Steamed bean pudding cups",
+          sizes: [
+            { label: "Small", price: 15000 },
+            { label: "Med", price: 32000 },
+            { label: "Large", price: 64000 },
+          ],
+        },
+        {
+          id: "pr11",
+          category: "protein",
+          name: "Moi Moi Elewe",
+          desc: "Traditional leaf-wrapped steamed bean pudding",
+          sizes: [
+            { label: "Small", price: 20000 },
+            { label: "Med", price: 38000 },
+            { label: "Large", price: 70000 },
+          ],
+        },
+      ];
+
+      // State variables
+      let selectedCategory = "all";
+      let searchQuery = "";
+      let cart = []; // Array of { id, itemId, name, sizeLabel, price, qty }
+      let selectedSizeMap = {}; // Maps item.id -> index of selected size
+
+      // Utility: Format currency in Naira
+      function formatNaira(num) {
+        return "₦" + num.toLocaleString("en-NG");
+      }
+
+      // Render Categories
+      function renderCategories() {
+        const container = document.getElementById("categoryContainer");
+        container.innerHTML = categories
+          .map(
+            (cat) => `
+                <button onclick="setCategory('${cat.id}')" 
+                    class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2 border border-white/10 ${selectedCategory === cat.id ? "active-tab" : "bg-white/10 text-orange-100 hover:bg-white/20"}">
+                    <i class="fa-solid ${cat.icon}"></i>
+                    <span>${cat.name}</span>
+                </button>
+            `,
+          )
+          .join("");
+      }
+
+      // Set Active Category
+      function setCategory(catId) {
+        selectedCategory = catId;
+        renderCategories();
+        renderMenu();
+
+        const catObj = categories.find((c) => c.id === catId);
+        document.getElementById("currentCategoryTitle").innerText = catObj
+          ? catObj.name
+          : "All Items";
+      }
+
+      // Render Menu Items Grid
+      function renderMenu() {
+        const grid = document.getElementById("menuGrid");
+        const emptyState = document.getElementById("emptyState");
+
+        // Filter items by category & search
+        const filtered = menuItems.filter((item) => {
+          const matchesCat =
+            selectedCategory === "all" || item.category === selectedCategory;
+          const matchesSearch =
+            item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.desc.toLowerCase().includes(searchQuery.toLowerCase());
+          return matchesCat && matchesSearch;
+        });
+
+        document.getElementById("itemCountBadge").innerText =
+          `${filtered.length} item${filtered.length === 1 ? "" : "s"}`;
+
+        if (filtered.length === 0) {
+          grid.innerHTML = "";
+          emptyState.classList.remove("hidden");
+          return;
+        }
+
+        emptyState.classList.add("hidden");
+
+        grid.innerHTML = filtered
+          .map((item) => {
+            // Determine currently selected size for this item
+            const sizeIndex = selectedSizeMap[item.id] || 0;
+            const activeSize = item.sizes[sizeIndex] || item.sizes[0];
+
+            return `
+                <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-100 hover:shadow-md transition flex flex-col justify-between relative group">
+                    <div>
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-base sm:text-lg leading-snug">${item.name}</h3>
+                                <p class="text-xs text-slate-500 mt-1">${item.desc}</p>
+                            </div>
+                        </div>
+
+                        <!-- Portion/Size Selectors if multi-size -->
+                        ${
+                          item.sizes.length > 1
+                            ? `
+                            <div class="mt-4">
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Select Size/Portion:</p>
+                                <div class="flex flex-wrap gap-1.5">
+                                    ${item.sizes
+                                      .map(
+                                        (s, idx) => `
+                                        <button onclick="selectSize('${item.id}', ${idx})" 
+                                            class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition ${idx === sizeIndex ? "bg-brand-500 text-white border-brand-500 shadow-sm" : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"}">
+                                            ${s.label}
+                                        </button>
+                                    `,
+                                      )
+                                      .join("")}
+                                </div>
+                            </div>
+                        `
+                            : ""
+                        }
+                    </div>
+
+                    <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-slate-400 uppercase font-bold block">Price</span>
+                            <span class="text-lg font-extrabold text-brand-800">${formatNaira(activeSize.price)}</span>
+                        </div>
+                        <button onclick="addToCart('${item.id}')" class="bg-brand-500 hover:bg-brand-600 active:scale-95 text-white px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md shadow-brand-500/20 transition">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+                `;
+          })
+          .join("");
+      }
+
+      // Handle Portion Size Selection
+      function selectSize(itemId, sizeIndex) {
+        selectedSizeMap[itemId] = sizeIndex;
+        renderMenu();
+      }
+
+      // Add Item to Cart
+      function addToCart(itemId) {
+        const item = menuItems.find((i) => i.id === itemId);
+        if (!item) return;
+
+        const sizeIndex = selectedSizeMap[itemId] || 0;
+        const sizeObj = item.sizes[sizeIndex];
+
+        // Unique key for item + size combo
+        const cartKey = `${item.id}_${sizeObj.label}`;
+        const existing = cart.find((c) => c.cartKey === cartKey);
+
+        // Minimum 10 pieces for Swallow items
+        const minQty = item.category === "swallow" ? 10 : 1;
+
+        if (existing) {
+          existing.qty += item.category === "swallow" ? 10 : 1;
+        } else {
+          cart.push({
+            cartKey: cartKey,
+            itemId: item.id,
+            name: item.name,
+            sizeLabel: sizeObj.label,
+            price: sizeObj.price,
+            qty: minQty,
+            isSwallow: item.category === "swallow",
+          });
+        }
+
+        updateCartUI();
+
+        // Visual feedback on floating bar
+        const bar = document.getElementById("floatingCartBar");
+        bar.classList.add("scale-105");
+        setTimeout(() => bar.classList.remove("scale-105"), 200);
+      }
+
+      // Update Cart Floating Bar and Modal
+      function updateCartUI() {
+        const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+        const totalPrice = cart.reduce(
+          (sum, item) => sum + item.price * item.qty,
+          0,
+        );
+
+        // Update Floating Bar
+        document.getElementById("cartBadge").innerText = totalItems;
+        document.getElementById("cartBarTotal").innerText =
+          formatNaira(totalPrice);
+        document.getElementById("modalSubtotal").innerText =
+          formatNaira(totalPrice);
+
+        const bar = document.getElementById("floatingCartBar");
+        if (cart.length > 0) {
+          bar.classList.remove("translate-y-32");
+        } else {
+          bar.classList.add("translate-y-32");
+        }
+
+        // Render Cart Modal Rows
+        const list = document.getElementById("cartItemsList");
+        const emptyMsg = document.getElementById("emptyCartMessage");
+
+        if (cart.length === 0) {
+          list.innerHTML = "";
+          emptyMsg.classList.remove("hidden");
+          return;
+        }
+
+        emptyMsg.classList.add("hidden");
+        list.innerHTML = cart
+          .map(
+            (item, index) => `
+                <div class="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+                    <div class="flex-1 pr-3">
+                        <h5 class="font-bold text-slate-800 text-sm leading-tight">${item.name}</h5>
+                        <p class="text-xs text-brand-600 font-semibold mt-0.5">${item.sizeLabel} • ${formatNaira(item.price)}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="flex items-center bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
+                            <button onclick="changeQty(${index}, -1)" class="w-7 h-7 flex items-center justify-center text-slate-600 hover:bg-slate-100 active:bg-slate-200 text-xs font-bold">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+                            <span class="w-8 text-center text-xs font-bold text-slate-800">${item.qty}</span>
+                            <button onclick="changeQty(${index}, 1)" class="w-7 h-7 flex items-center justify-center text-slate-600 hover:bg-slate-100 active:bg-slate-200 text-xs font-bold">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                        <button onclick="removeItem(${index})" class="text-slate-400 hover:text-red-500 p-1.5 transition">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            `,
+          )
+          .join("");
+      }
+
+      // Change Cart Item Quantity
+      function changeQty(index, delta) {
+        const item = cart[index];
+        const step = item.isSwallow ? 10 : 1;
+
+        item.qty += delta * step;
+
+        if (item.qty <= 0) {
+          cart.splice(index, 1);
+        }
+        updateCartUI();
+      }
+
+      // Remove Cart Item Completely
+      function removeItem(index) {
+        cart.splice(index, 1);
+        updateCartUI();
+      }
+
+      // Toggle Cart Modal Visibility
+      function toggleCartModal(show) {
+        const modal = document.getElementById("cartModal");
+        if (show) {
+          modal.classList.remove("hidden");
+          setTimeout(() => modal.classList.remove("opacity-0"), 10);
+        } else {
+          modal.classList.add("opacity-0");
+          setTimeout(() => modal.classList.add("hidden"), 300);
         }
       }
-      updateCartUI();
-    }
 
-    function openCartDrawer() {
-      const overlay = document.getElementById('cartDrawerOverlay');
-      const drawer = document.getElementById('cartDrawer');
-      overlay.classList.remove('opacity-0', 'pointer-events-none');
-      drawer.classList.remove('translate-x-full');
-    }
-
-    function closeCartDrawer() {
-      const overlay = document.getElementById('cartDrawerOverlay');
-      const drawer = document.getElementById('cartDrawer');
-      overlay.classList.add('opacity-0', 'pointer-events-none');
-      drawer.classList.add('translate-x-full');
-    }
-
-    function toggleAddressField() {
-      const type = document.getElementById('custOrderType').value;
-      const addrBox = document.getElementById('custAddress');
-      if(type === 'Pick-up') {
-        addrBox.placeholder = "Optional pickup time or notes...";
-      } else {
-        addrBox.placeholder = "Enter delivery address in Lagos...";
-      }
-    }
-
-    function submitOrderToWhatsApp() {
-      const name = document.getElementById('custName').value.trim();
-      const phone = document.getElementById('custPhone').value.trim();
-      const orderType = document.getElementById('custOrderType').value;
-      const address = document.getElementById('custAddress').value.trim();
-      const note = document.getElementById('custNote').value.trim();
-
-      if(!name || !phone) {
-        alert("Please enter your name and phone number before proceeding.");
-        return;
+      // Toggle Delivery Address visibility based on fulfillment option
+      function toggleAddressVisibility(isDelivery) {
+        const addrGroup = document.getElementById("addressGroup");
+        const addrInput = document.getElementById("custAddress");
+        if (isDelivery) {
+          addrGroup.classList.remove("hidden");
+          addrInput.setAttribute("required", "true");
+        } else {
+          addrGroup.classList.add("hidden");
+          addrInput.removeAttribute("required");
+        }
       }
 
-      const keys = Object.keys(cart);
-      if(keys.length === 0) {
-        alert("Your cart is empty!");
-        return;
+      // Formulate WhatsApp receipt and open link
+      function sendOrderToWhatsApp() {
+        if (cart.length === 0) {
+          alert("Your cart is empty. Please select meals before checking out.");
+          return;
+        }
+
+        const name = document.getElementById("custName").value.trim();
+        const phone = document.getElementById("custPhone").value.trim();
+        const fulfilment = document.querySelector(
+          'input[name="fulfilment"]:checked',
+        ).value;
+        const address = document.getElementById("custAddress").value.trim();
+        const note = document.getElementById("custNote").value.trim();
+
+        if (!name || !phone) {
+          alert("Please fill in your Name and Phone Number.");
+          return;
+        }
+
+        if (fulfilment === "Delivery" && !address) {
+          alert("Please provide your Delivery Address.");
+          return;
+        }
+
+        const totalPrice = cart.reduce(
+          (sum, item) => sum + item.price * item.qty,
+          0,
+        );
+
+        // Format WhatsApp Message Text
+        let text = `*NEW ORDER - Rukkie's Meals & Treats*\n`;
+        text += `------------------------------------\n\n`;
+        text += `*CUSTOMER DETAILS:*\n`;
+        text += `👤 *Name:* ${name}\n`;
+        text += `📞 *Phone:* ${phone}\n`;
+        text += `🚚 *Fulfillment:* ${fulfilment}\n`;
+        if (fulfilment === "Delivery") {
+          text += `📍 *Delivery Address:* ${address}\n`;
+        }
+        if (note) {
+          text += `📝 *Note:* ${note}\n`;
+        }
+
+        text += `\n*ORDER ITEMS:*\n`;
+        cart.forEach((item, i) => {
+          const lineTotal = item.price * item.qty;
+          text += `${i + 1}. *${item.name}* (${item.sizeLabel})\n   • Qty: ${item.qty} x ₦${item.price.toLocaleString()} = ₦${lineTotal.toLocaleString()}\n`;
+        });
+
+        text += `\n------------------------------------\n`;
+        text += `💰 *TOTAL AMOUNT:* ${formatNaira(totalPrice)}\n`;
+        text += `------------------------------------\n`;
+        text += `Thank you! Please confirm my order.`;
+
+        const encodedText = encodeURIComponent(text);
+        const whatsappUrl = `https://wa.me/2348100385700?text=${encodedText}`;
+
+        window.open(whatsappUrl, "_blank");
       }
 
-      let orderText = `*NEW ORDER - Rukkie's Meals & Treats*\n`;
-      orderText += `---------------------------------\n`;
-      orderText += `*Customer Details:*\n`;
-      orderText += `• *Name:* ${name}\n`;
-      orderText += `• *Phone:* ${phone}\n`;
-      orderText += `• *Order Type:* ${orderType}\n`;
-      if(address) orderText += `• *Address/Details:* ${address}\n`;
-      if(note) orderText += `• *Note:* ${note}\n`;
-      orderText += `---------------------------------\n`;
-      orderText += `*Ordered Items:*\n`;
-
-      let total = 0;
-      keys.forEach((k, idx) => {
-        const item = cart[k];
-        const lineTotal = item.price * item.qty;
-        total += lineTotal;
-        orderText += `${idx + 1}. ${item.title} (${item.size}) x${item.qty} = ₦${lineTotal.toLocaleString()}\n`;
+      // Search Input Event
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        searchQuery = e.target.value;
+        const clearBtn = document.getElementById("clearSearch");
+        if (searchQuery) {
+          clearBtn.classList.remove("hidden");
+        } else {
+          clearBtn.classList.add("hidden");
+        }
+        renderMenu();
       });
 
-      orderText += `---------------------------------\n`;
-      orderText += `*TOTAL AMOUNT: ₦${total.toLocaleString()}*\n`;
-      orderText += `---------------------------------\n`;
-      orderText += `Please confirm availability and account details for payment.`;
+      document.getElementById("clearSearch").addEventListener("click", () => {
+        document.getElementById("searchInput").value = "";
+        searchQuery = "";
+        document.getElementById("clearSearch").classList.add("hidden");
+        renderMenu();
+      });
 
-      const encodedMsg = encodeURIComponent(orderText);
-      const whatsappURL = `https://wa.me/2348100385700?text=${encodedMsg}`;
-
-      window.open(whatsappURL, '_blank');
-    }
-
-    function handleSearch() {
-      const input = document.getElementById("searchInput").value;
-      const clearBtn = document.getElementById("clearSearchBtn");
-      if(input.length > 0) {
-        clearBtn.classList.remove("hidden");
-      } else {
-        clearBtn.classList.add("hidden");
-      }
-      renderMenu();
-    }
-
-    function clearSearch() {
-      document.getElementById("searchInput").value = "";
-      handleSearch();
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      loadMenuData();
-    });
-  </script>
-</body>
+      // Initialize App on DOM Ready
+      window.addEventListener("DOMContentLoaded", () => {
+        renderCategories();
+        renderMenu();
+      });
+    </script>
+  </body>
 </html>
