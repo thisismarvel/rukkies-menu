@@ -227,7 +227,7 @@
     // Live Google Sheet CSV URL Configuration
     const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQA1yv_CIuFqa_MjfMf3sRHup8Sj5FXdrBC6vNgqNED7JgZSRKhBslSS2zvqahnn1DmB4isF_C-dL4-/pub?output=csv";
 
-    // Standard Fallback Menu Data (In case Google Sheet connection fails or is loading)
+    // Standard Fallback Menu Data
     const fallbackMenuItems = [
       { id: "c1", category: "Combo Deals (1L)", title: "1L Spicy Singapore Noodles", description: "Shredded beef, sausage & veggies", prices: { "1L": 16000 }, popular: true, available: true },
       { id: "c2", category: "Combo Deals (1L)", title: "1L Loaded Native Rice", description: "Snail, ponmo, dried prawn & fish", prices: { "1L": 20000 }, popular: true, available: true },
@@ -258,10 +258,9 @@
     ];
 
     let menuData = [];
-    let cart = {}; // { itemId_size: { item, size, price, qty } }
+    let cart = {};
     let activeCategory = "All Items";
 
-    // Parse CSV from Google Sheets
     async function loadMenuData() {
       try {
         const response = await fetch(GOOGLE_SHEET_CSV_URL);
@@ -284,11 +283,9 @@
     function parseCSV(text) {
       const lines = text.split('\n').filter(l => l.trim() !== '');
       if(lines.length < 2) return null;
-      const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
       
       const items = [];
       for(let i = 1; i < lines.length; i++) {
-        // Simple regex to parse CSV lines with quotes
         const row = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || lines[i].split(',');
         if(!row || row.length < 4) continue;
         
@@ -369,7 +366,6 @@
         noResults.classList.add("hidden");
       }
 
-      // Group by Category if "All Items" selected
       let html = "";
       const categoriesToRender = activeCategory === "All Items" ? getCategories().filter(c => c !== "All Items") : [activeCategory];
 
@@ -414,7 +410,6 @@
           </div>
 
           <div class="pt-2 border-t border-gray-100 space-y-2">
-            <!-- Portion Size Selector -->
             <div>
               <label class="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Select Size / Portion:</label>
               <div class="flex flex-wrap gap-1" id="size-options-${item.id}">
@@ -436,7 +431,6 @@
               </div>
             </div>
 
-            <!-- Price and Add Button -->
             <div class="flex items-center justify-between pt-1">
               <div>
                 <span class="text-[10px] text-gray-400 block font-medium">Price</span>
@@ -509,7 +503,6 @@
         totalPrice += (cart[k].price * cart[k].qty);
       });
 
-      // Update Floating Bar
       document.getElementById('cartBadgeCount').innerText = totalQty;
       document.getElementById('cartTotalAmount').innerText = `₦${totalPrice.toLocaleString()}`;
 
@@ -521,7 +514,6 @@
         closeCartDrawer();
       }
 
-      // Update Drawer Items
       renderCartDrawerItems(totalPrice);
     }
 
@@ -655,7 +647,6 @@
       handleSearch();
     }
 
-    // Initialize App
     window.addEventListener('DOMContentLoaded', () => {
       loadMenuData();
     });
