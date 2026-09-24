@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rukkie's Meals and Treats | Digital Menu & Order</title>
+    
+    <!-- Favicon Configuration -->
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link rel="apple-touch-icon" href="logo.png" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       rel="stylesheet"
@@ -83,9 +88,9 @@
         >
           <div class="flex items-center gap-3 text-center sm:text-left">
             <div
-              class="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-3xl shadow-inner border border-white/20 shrink-0"
+              class="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center p-1 shadow-inner border border-white/20 shrink-0 overflow-hidden"
             >
-              🍲
+              <img src="logo.png" alt="Rukkie's Logo" class="w-full h-full object-cover rounded-xl" />
             </div>
             <div>
               <h1
@@ -146,7 +151,7 @@
       </div>
 
       <!-- Category Navigation Bar -->
-      <div class="bg-brand- dark/40 border-t border-white/10 backdrop-blur-md">
+      <div class="bg-brand-dark/40 border-t border-white/10 backdrop-blur-md">
         <div
           class="max-w-5xl mx-auto px-4 py-2.5 overflow-x-auto hide-scrollbar flex items-center gap-2"
           id="categoryContainer"
@@ -191,6 +196,12 @@
       <!-- Menu Items Grid -->
       <div id="menuGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Dynamic Menu Cards Rendered Here -->
+      </div>
+
+      <!-- Loading State -->
+      <div id="loadingState" class="text-center py-12 px-4">
+        <i class="fa-solid fa-circle-notch fa-spin text-3xl text-brand-500 mb-3"></i>
+        <p class="text-slate-600 text-sm font-medium">Fetching fresh menu directly from Google Sheets...</p>
       </div>
 
       <!-- Empty State -->
@@ -259,9 +270,9 @@
         >
           <div class="flex items-center gap-3">
             <div
-              class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-xl"
+              class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-xl overflow-hidden p-1"
             >
-              🛒
+              <img src="logo.png" alt="Rukkie's Logo" class="w-full h-full object-cover rounded-lg" />
             </div>
             <div>
               <h3 class="font-bold text-lg font-serif">Your Order Cart</h3>
@@ -436,6 +447,8 @@
     </div>
 
     <script>
+      const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQA1yv_CIuFqa_MjfMf3sRHup8Sj5FXdrBC6vNgqNED7JgZSRKhBslSS2zvqahnn1DmB4isF_C-dL4-/pub?output=csv";
+
       // Data Store
       const categories = [
         { id: "all", name: "All Items", icon: "fa-utensils" },
@@ -447,838 +460,69 @@
         { id: "protein", name: "Protein Platters", icon: "fa-drumstick-bite" },
       ];
 
-      const menuItems = [
-        // COMBO DEALS (1L)
-        {
-          id: "c1",
-          category: "combo",
-          name: "1L Spicy Singapore Noodles",
-          desc: "Shredded beef, sausage & veggies",
-          sizes: [{ label: "1L", price: 16000 }],
-        },
-        {
-          id: "c2",
-          category: "combo",
-          name: "1L Loaded Native Rice",
-          desc: "Snail, ponmo, dried prawn & fish",
-          sizes: [{ label: "1L", price: 20000 }],
-        },
-        {
-          id: "c3",
-          category: "combo",
-          name: "1L Native Pasta",
-          desc: "Egg, dried prawn & fish",
-          sizes: [{ label: "1L", price: 18000 }],
-        },
-        {
-          id: "c4",
-          category: "combo",
-          name: "1L Liver Fried Rice",
-          desc: "With 2 mixed protein",
-          sizes: [{ label: "1L", price: 28000 }],
-        },
-        {
-          id: "c5",
-          category: "combo",
-          name: "1L Tray Jollof Rice",
-          desc: "With 2 mixed protein",
-          sizes: [{ label: "1L", price: 25000 }],
-        },
-        {
-          id: "c6",
-          category: "combo",
-          name: "1L Asun Pasta",
-          desc: "With 2 mixed protein",
-          sizes: [{ label: "1L", price: 32000 }],
-        },
-        {
-          id: "c7",
-          category: "combo",
-          name: "Rice & Beans + Iya Risi Sauce",
-          desc: "1L rice & beans + 1L sauce",
-          sizes: [{ label: "1L + 1L", price: 40000 }],
-        },
-        {
-          id: "c8",
-          category: "combo",
-          name: "Soup Combo Deal (3 Options)",
-          desc: "Efo Riro, Egusi Elefo, Iya Risi, Egusi Ijebu, Okra",
-          sizes: [{ label: "1 Combo", price: 70000 }],
-        },
+      let menuItems = [];
 
-        // RICE & PASTA
-        {
-          id: "rp1",
-          category: "rice-pasta",
-          name: "Native Rice",
-          desc: "Traditional rich palm oil rice with local spices",
-          sizes: [
-            { label: "2.5L", price: 50000 },
-            { label: "3.5L", price: 75000 },
-            { label: "5L", price: 105000 },
-            { label: "7L", price: 130000 },
-          ],
-        },
-        {
-          id: "rp2",
-          category: "rice-pasta",
-          name: "Loaded Jollof Rice",
-          desc: "Richly garnised smoky party jollof rice",
-          sizes: [
-            { label: "2.5L", price: 45000 },
-            { label: "3.5L", price: 70000 },
-            { label: "5L", price: 90000 },
-            { label: "7L", price: 115000 },
-          ],
-        },
-        {
-          id: "rp3",
-          category: "rice-pasta",
-          name: "Caribbean Rice",
-          desc: "Flavorful spiced rice with tropical veggies",
-          sizes: [
-            { label: "2.5L", price: 50000 },
-            { label: "3.5L", price: 75000 },
-            { label: "5L", price: 105000 },
-            { label: "7L", price: 140000 },
-          ],
-        },
-        {
-          id: "rp4",
-          category: "rice-pasta",
-          name: "Coconut Rice",
-          desc: "Fragrant coconut milk infused rice",
-          sizes: [
-            { label: "2.5L", price: 50000 },
-            { label: "3.5L", price: 75000 },
-            { label: "5L", price: 105000 },
-            { label: "7L", price: 140000 },
-          ],
-        },
-        {
-          id: "rp5",
-          category: "rice-pasta",
-          name: "Native Pasta",
-          desc: "Local style seasoned pasta mix",
-          sizes: [
-            { label: "2.5L", price: 45000 },
-            { label: "3.5L", price: 70000 },
-            { label: "5L", price: 90000 },
-            { label: "7L", price: 115000 },
-          ],
-        },
-        {
-          id: "rp6",
-          category: "rice-pasta",
-          name: "Plain Ofada Rice",
-          desc: "Steamed local unpolished rice",
-          sizes: [
-            { label: "2.5L", price: 20000 },
-            { label: "3.5L", price: 35000 },
-            { label: "5L", price: 55000 },
-            { label: "7L", price: 70000 },
-          ],
-        },
-        {
-          id: "rp7",
-          category: "rice-pasta",
-          name: "Party/Smokey Jollof Rice",
-          desc: "Classic Nigerian firewood style jollof",
-          sizes: [
-            { label: "2.5L", price: 25000 },
-            { label: "3.5L", price: 35000 },
-            { label: "5L", price: 50000 },
-            { label: "7L", price: 75000 },
-          ],
-        },
-        {
-          id: "rp8",
-          category: "rice-pasta",
-          name: "Stir-Fry Pasta",
-          desc: "Sautéed pasta with vibrant vegetables",
-          sizes: [
-            { label: "2.5L", price: 35000 },
-            { label: "3.5L", price: 50000 },
-            { label: "5L", price: 75000 },
-            { label: "7L", price: 100000 },
-          ],
-        },
-        {
-          id: "rp9",
-          category: "rice-pasta",
-          name: "Asun Rice",
-          desc: "Rice tossed with spicy peppered goat meat bites",
-          sizes: [
-            { label: "2.5L", price: 50000 },
-            { label: "3.5L", price: 75000 },
-            { label: "5L", price: 105000 },
-            { label: "7L", price: 140000 },
-          ],
-        },
-        {
-          id: "rp10",
-          category: "rice-pasta",
-          name: "Plain Rice & Beans",
-          desc: "Classic steamed rice and soft beans mix",
-          sizes: [
-            { label: "2.5L", price: 20000 },
-            { label: "3.5L", price: 35000 },
-            { label: "5L", price: 50000 },
-            { label: "7L", price: 75000 },
-          ],
-        },
-        {
-          id: "rp11",
-          category: "rice-pasta",
-          name: "Basmati Fried Rice",
-          desc: "Premium long-grain fried rice with veggies",
-          sizes: [
-            { label: "2.5L", price: 35000 },
-            { label: "3.5L", price: 45000 },
-            { label: "5L", price: 65000 },
-            { label: "7L", price: 90000 },
-          ],
-        },
-        {
-          id: "rp12",
-          category: "rice-pasta",
-          name: "Seafood Rice",
-          desc: "Rich rice dish loaded with fresh seafood",
-          sizes: [
-            { label: "2.5L", price: 50000 },
-            { label: "3.5L", price: 75000 },
-            { label: "5L", price: 115000 },
-            { label: "7L", price: 140000 },
-          ],
-        },
-        {
-          id: "rp13",
-          category: "rice-pasta",
-          name: "Naija Fried Rice",
-          desc: "Homestyle Nigerian savory fried rice",
-          sizes: [
-            { label: "2.5L", price: 28000 },
-            { label: "3.5L", price: 38000 },
-            { label: "5L", price: 68000 },
-            { label: "7L", price: 88000 },
-          ],
-        },
-        {
-          id: "rp14",
-          category: "rice-pasta",
-          name: "Jollof Pasta",
-          desc: "Spicy tomato reduction cooked spaghetti",
-          sizes: [
-            { label: "2.5L", price: 25000 },
-            { label: "3.5L", price: 45000 },
-            { label: "5L", price: 80000 },
-            { label: "7L", price: 100000 },
-          ],
-        },
-        {
-          id: "rp15",
-          category: "rice-pasta",
-          name: "Spicy Singapore Noodles",
-          desc: "Wok-tossed spicy noodles",
-          sizes: [
-            { label: "2.5L", price: 45000 },
-            { label: "3.5L", price: 75000 },
-            { label: "5L", price: 90000 },
-            { label: "7L", price: 120000 },
-          ],
-        },
+      // Helper function to parse CSV robustly
+      function parseCSV(csvText) {
+        const lines = csvText.trim().split(/\r?\n/);
+        if (lines.length < 2) return [];
 
-        // PORRIDGE
-        {
-          id: "po1",
-          category: "porridge",
-          name: "Yam Porridge",
-          desc: "Richly seasoned soft yam pottage (Asaro)",
-          sizes: [
-            { label: "2.5L", price: 35000 },
-            { label: "3.5L", price: 55000 },
-            { label: "5L", price: 85000 },
-            { label: "7L", price: 120000 },
-          ],
-        },
-        {
-          id: "po2",
-          category: "porridge",
-          name: "Ewa Agoyin & Sauce",
-          desc: "Mashed beans with dark spicy Agoyin sauce",
-          sizes: [
-            { label: "2.5L", price: 40000 },
-            { label: "3.5L", price: 65000 },
-            { label: "5L", price: 95000 },
-            { label: "7L", price: 130000 },
-          ],
-        },
-        {
-          id: "po3",
-          category: "porridge",
-          name: "Plantain Porridge",
-          desc: "Savory unripe or ripe plantain porridge",
-          sizes: [
-            { label: "2.5L", price: 45000 },
-            { label: "3.5L", price: 70000 },
-            { label: "5L", price: 105000 },
-            { label: "7L", price: 140000 },
-          ],
-        },
-        {
-          id: "po4",
-          category: "porridge",
-          name: "Beans Porridge",
-          desc: "Classic seasoned Nigerian beans porridge",
-          sizes: [
-            { label: "2.5L", price: 35000 },
-            { label: "3.5L", price: 50000 },
-            { label: "5L", price: 75000 },
-          ],
-        },
+        const headers = lines[0].split(",").map(h => h.trim().toLowerCase().replace(/[^a-z0-9]/g, ""));
+        
+        return lines.slice(1).map((line, idx) => {
+          // Handle quoted cells containing commas
+          const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || line.split(",");
+          const cleanValues = values.map(v => v.replace(/^"|"$/g, "").trim());
 
-        // SOUPS, STEWS & SAUCES
-        {
-          id: "sp1",
-          category: "soups",
-          name: "Efo Riro",
-          desc: "Rich vegetable soup with assorted seasonings",
-          sizes: [
-            { label: "2.5L", price: 45000 },
-            { label: "3.5L", price: 60000 },
-            { label: "5L", price: 85000 },
-            { label: "7L", price: 110000 },
-          ],
-        },
-        {
-          id: "sp2",
-          category: "soups",
-          name: "Okra Soup",
-          desc: "Hearty chopped okra soup",
-          sizes: [
-            { label: "2.5L", price: 45000 },
-            { label: "3.5L", price: 60000 },
-            { label: "5L", price: 85000 },
-            { label: "7L", price: 110000 },
-          ],
-        },
-        {
-          id: "sp3",
-          category: "soups",
-          name: "Ofada Sauce",
-          desc: "Spicy bleached palm oil pepper sauce with locust beans",
-          sizes: [
-            { label: "2.5L", price: 55000 },
-            { label: "3.5L", price: 70000 },
-            { label: "5L", price: 90000 },
-            { label: "7L", price: 120000 },
-          ],
-        },
-        {
-          id: "sp4",
-          category: "soups",
-          name: "Plain Okro",
-          desc: "Lightly seasoned plain draw okra",
-          sizes: [
-            { label: "2.5L", price: 18000 },
-            { label: "3.5L", price: 25000 },
-          ],
-        },
-        {
-          id: "sp5",
-          category: "soups",
-          name: "Egusi Ijebu",
-          desc: "Smooth, un-clustered Ijebu style melon soup",
-          sizes: [
-            { label: "2.5L", price: 45000 },
-            { label: "3.5L", price: 60000 },
-            { label: "5L", price: 85000 },
-            { label: "7L", price: 110000 },
-          ],
-        },
-        {
-          id: "sp6",
-          category: "soups",
-          name: "Ewedu",
-          desc: "Smooth blended jute leaf soup",
-          sizes: [
-            { label: "2.5L", price: 20000 },
-            { label: "3.5L", price: 30000 },
-          ],
-        },
-        {
-          id: "sp7",
-          category: "soups",
-          name: "Cow Tail Stew",
-          desc: "Rich tomato stew cooked with tender cow tail",
-          sizes: [
-            { label: "2.5L", price: 70000 },
-            { label: "3.5L", price: 95000 },
-            { label: "5L", price: 130000 },
-            { label: "7L", price: 160000 },
-          ],
-        },
-        {
-          id: "sp8",
-          category: "soups",
-          name: "Oha Soup",
-          desc: "Traditional Eastern Oha leaf soup",
-          sizes: [
-            { label: "2.5L", price: 50000 },
-            { label: "3.5L", price: 70000 },
-            { label: "5L", price: 96000 },
-            { label: "7L", price: 130000 },
-          ],
-        },
-        {
-          id: "sp9",
-          category: "soups",
-          name: "Egusi Elefo",
-          desc: "Lumpy melon seed soup cooked with spinach/ugwu",
-          sizes: [
-            { label: "2.5L", price: 45000 },
-            { label: "3.5L", price: 60000 },
-            { label: "5L", price: 90000 },
-            { label: "7L", price: 110000 },
-          ],
-        },
-        {
-          id: "sp10",
-          category: "soups",
-          name: "Seafood Okra",
-          desc: "Loaded okra soup with crab, prawns & fish",
-          sizes: [
-            { label: "2.5L", price: 55000 },
-            { label: "3.5L", price: 80000 },
-            { label: "5L", price: 105000 },
-            { label: "7L", price: 140000 },
-          ],
-        },
-        {
-          id: "sp11",
-          category: "soups",
-          name: "Iya Risi Stew",
-          desc: "Signature rich Bukka style fried pepper stew",
-          sizes: [
-            { label: "2.5L", price: 50000 },
-            { label: "3.5L", price: 70000 },
-            { label: "5L", price: 110000 },
-            { label: "7L", price: 130000 },
-          ],
-        },
-        {
-          id: "sp12",
-          category: "soups",
-          name: "Fresh Fish Soup",
-          desc: "Delicate light fresh fish soup",
-          sizes: [
-            { label: "2.5L", price: 50000 },
-            { label: "3.5L", price: 70000 },
-            { label: "5L", price: 96000 },
-            { label: "7L", price: 130000 },
-          ],
-        },
-        {
-          id: "sp13",
-          category: "soups",
-          name: "Ogbono",
-          desc: "Rich draw soup cooked with traditional spices",
-          sizes: [
-            { label: "2.5L", price: 55000 },
-            { label: "3.5L", price: 75000 },
-            { label: "5L", price: 110000 },
-            { label: "7L", price: 140000 },
-          ],
-        },
-        {
-          id: "sp14",
-          category: "soups",
-          name: "Shredded Beef Sauce",
-          desc: "Savoury dark sauce cooked with beef strips",
-          sizes: [
-            { label: "2.5L", price: 60000 },
-            { label: "3.5L", price: 85000 },
-            { label: "5L", price: 125000 },
-            { label: "7L", price: 150000 },
-          ],
-        },
-        {
-          id: "sp15",
-          category: "soups",
-          name: "Goat Meat Stew",
-          desc: "Deeply seasoned goat meat tomato stew",
-          sizes: [
-            { label: "2.5L", price: 55000 },
-            { label: "3.5L", price: 75000 },
-            { label: "5L", price: 110000 },
-            { label: "7L", price: 140000 },
-          ],
-        },
-        {
-          id: "sp16",
-          category: "soups",
-          name: "Chicken in Curry Sauce",
-          desc: "Creamy savory curry chicken sauce",
-          sizes: [
-            { label: "2.5L", price: 60000 },
-            { label: "3.5L", price: 85000 },
-            { label: "5L", price: 125000 },
-            { label: "7L", price: 150000 },
-          ],
-        },
-        {
-          id: "sp17",
-          category: "soups",
-          name: "Chicken Stew",
-          desc: "Classic tomato stew with chicken pieces",
-          sizes: [
-            { label: "2.5L", price: 50000 },
-            { label: "3.5L", price: 70000 },
-            { label: "5L", price: 110000 },
-            { label: "7L", price: 130000 },
-          ],
-        },
-        {
-          id: "sp18",
-          category: "soups",
-          name: "Prawn in Sweet & Sour",
-          desc: "Delicious sweet & tangy prawn sauce",
-          sizes: [
-            { label: "2.5L", price: 70000 },
-            { label: "3.5L", price: 90000 },
-            { label: "5L", price: 130000 },
-            { label: "7L", price: 175000 },
-          ],
-        },
-        {
-          id: "sp19",
-          category: "soups",
-          name: "Live Chicken Stew",
-          desc: "Rich stew cooked with fresh local chicken",
-          sizes: [
-            { label: "2.5L", price: 55000 },
-            { label: "3.5L", price: 75000 },
-            { label: "5L", price: 110000 },
-            { label: "7L", price: 140000 },
-          ],
-        },
-        {
-          id: "sp20",
-          category: "soups",
-          name: "Catfish Pepper Soup",
-          desc: "Spicy herbal catfish soup",
-          sizes: [
-            { label: "2.5L", price: 40000 },
-            { label: "3.5L", price: 55000 },
-            { label: "5L", price: 85000 },
-            { label: "7L", price: 105000 },
-          ],
-        },
-        {
-          id: "sp21",
-          category: "soups",
-          name: "Assorted Stew",
-          desc: "Nigerian tomato stew loaded with mixed meats",
-          sizes: [
-            { label: "2.5L", price: 55000 },
-            { label: "3.5L", price: 75000 },
-            { label: "5L", price: 110000 },
-            { label: "7L", price: 130000 },
-          ],
-        },
-        {
-          id: "sp22",
-          category: "soups",
-          name: "Assorted Pepper Soup",
-          desc: "Spicy pepper soup with varieties of meat",
-          sizes: [
-            { label: "2.5L", price: 50000 },
-            { label: "3.5L", price: 75000 },
-            { label: "5L", price: 95000 },
-            { label: "7L", price: 130000 },
-          ],
-        },
-        {
-          id: "sp23",
-          category: "soups",
-          name: "Cow Leg Stew",
-          desc: "Rich stew with tender gelatinous cow leg pieces",
-          sizes: [
-            { label: "2.5L", price: 70000 },
-            { label: "3.5L", price: 95000 },
-            { label: "5L", price: 130000 },
-            { label: "7L", price: 160000 },
-          ],
-        },
-        {
-          id: "sp24",
-          category: "soups",
-          name: "Chicken Pepper Soup",
-          desc: "Aromatic spicy chicken broth",
-          sizes: [
-            { label: "2.5L", price: 55000 },
-            { label: "3.5L", price: 80000 },
-            { label: "5L", price: 120000 },
-            { label: "7L", price: 140000 },
-          ],
-        },
-        {
-          id: "sp25",
-          category: "soups",
-          name: "White Soup (Ofe Nsala)",
-          desc: "Spicy yam thickened indigenous soup",
-          sizes: [
-            { label: "2.5L", price: 60000 },
-            { label: "3.5L", price: 85000 },
-            { label: "5L", price: 120000 },
-            { label: "7L", price: 150000 },
-          ],
-        },
-        {
-          id: "sp26",
-          category: "soups",
-          name: "Turkey Pepper Soup",
-          desc: "Hot pepper soup with succulent turkey chunks",
-          sizes: [
-            { label: "2.5L", price: 60000 },
-            { label: "3.5L", price: 85000 },
-            { label: "5L", price: 130000 },
-            { label: "7L", price: 170000 },
-          ],
-        },
-        {
-          id: "sp27",
-          category: "soups",
-          name: "Turkey Stew",
-          desc: "Fried turkey stew in savory pepper sauce",
-          sizes: [
-            { label: "2.5L", price: 60000 },
-            { label: "3.5L", price: 85000 },
-            { label: "5L", price: 120000 },
-            { label: "7L", price: 150000 },
-          ],
-        },
-        {
-          id: "sp28",
-          category: "soups",
-          name: "Goat Meat Pepper Soup",
-          desc: "Traditional spicy goat meat pepper soup",
-          sizes: [
-            { label: "2.5L", price: 55000 },
-            { label: "3.5L", price: 80000 },
-            { label: "5L", price: 120000 },
-            { label: "7L", price: 140000 },
-          ],
-        },
-        {
-          id: "sp29",
-          category: "soups",
-          name: "Hake Fish Stew",
-          desc: "Seared hake fish in spicy pepper sauce",
-          sizes: [
-            { label: "2.5L", price: 55000 },
-            { label: "3.5L", price: 70000 },
-            { label: "5L", price: 90000 },
-            { label: "7L", price: 110000 },
-          ],
-        },
-        {
-          id: "sp30",
-          category: "soups",
-          name: "Titus Fish Stew",
-          desc: "Mackerel/Titus fish cooked in rich red stew",
-          sizes: [
-            { label: "2.5L", price: 55000 },
-            { label: "3.5L", price: 70000 },
-            { label: "5L", price: 90000 },
-            { label: "7L", price: 115000 },
-          ],
-        },
-        {
-          id: "sp31",
-          category: "soups",
-          name: "Banga Soup",
-          desc: "Delta palm fruit extract soup with indigenous spices",
-          sizes: [
-            { label: "2.5L", price: 55000 },
-            { label: "3.5L", price: 70000 },
-            { label: "5L", price: 90000 },
-            { label: "7L", price: 115000 },
-          ],
-        },
-        {
-          id: "sp32",
-          category: "soups",
-          name: "Afang Soup",
-          desc: "Calabar style wild spinach & okazi leaf soup",
-          sizes: [
-            { label: "2.5L", price: 55000 },
-            { label: "3.5L", price: 70000 },
-            { label: "5L", price: 90000 },
-            { label: "7L", price: 115000 },
-          ],
-        },
+          const row = {};
+          headers.forEach((header, index) => {
+            row[header] = cleanValues[index] || "";
+          });
 
-        // SWALLOW
-        {
-          id: "sw1",
-          category: "swallow",
-          name: "Eba",
-          desc: "Cassava meal swallow (Minimum order: 10pcs)",
-          sizes: [{ label: "Per Piece", price: 1000 }],
-        },
-        {
-          id: "sw2",
-          category: "swallow",
-          name: "Fufu",
-          desc: "Smooth cassava fufu (Minimum order: 10pcs)",
-          sizes: [{ label: "Per Piece", price: 1000 }],
-        },
-        {
-          id: "sw3",
-          category: "swallow",
-          name: "Wheat",
-          desc: "Whole wheat swallow (Minimum order: 10pcs)",
-          sizes: [{ label: "Per Piece", price: 1500 }],
-        },
-        {
-          id: "sw4",
-          category: "swallow",
-          name: "Semo",
-          desc: "Smooth semolina swallow (Minimum order: 10pcs)",
-          sizes: [{ label: "Per Piece", price: 1000 }],
-        },
-        {
-          id: "sw5",
-          category: "swallow",
-          name: "Pounded Yam",
-          desc: "Poundo yam swallow (Minimum order: 10pcs)",
-          sizes: [{ label: "Per Piece", price: 2000 }],
-        },
+          // Parse dynamic sizes and prices from standard columns
+          const sizes = [];
+          
+          if (row.price) {
+            sizes.push({ label: row.sizelabel || row.size || "Standard", price: parseFloat(row.price.replace(/[^0-9.]/g, "")) || 0 });
+          }
+          if (row.price2) {
+            sizes.push({ label: row.sizelabel2 || row.size2 || "Medium", price: parseFloat(row.price2.replace(/[^0-9.]/g, "")) || 0 });
+          }
+          if (row.price3) {
+            sizes.push({ label: row.sizelabel3 || row.size3 || "Large", price: parseFloat(row.price3.replace(/[^0-9.]/g, "")) || 0 });
+          }
+          if (row.price4) {
+            sizes.push({ label: row.sizelabel4 || row.size4 || "Extra Large", price: parseFloat(row.price4.replace(/[^0-9.]/g, "")) || 0 });
+          }
 
-        // PROTEIN - TRAYS & PLATTERS
-        {
-          id: "pr1",
-          category: "protein",
-          name: "Peppered Chicken",
-          desc: "Spicy peppered fried chicken platter",
-          sizes: [
-            { label: "Small", price: 32000 },
-            { label: "Med", price: 62000 },
-            { label: "Large", price: 133000 },
-          ],
-        },
-        {
-          id: "pr2",
-          category: "protein",
-          name: "Peppered Turkey",
-          desc: "Golden peppered fried turkey platter",
-          sizes: [
-            { label: "Small", price: 38000 },
-            { label: "Med", price: 74000 },
-            { label: "Large", price: 158000 },
-          ],
-        },
-        {
-          id: "pr3",
-          category: "protein",
-          name: "Peppered Goat Meat",
-          desc: "Tender spicy goat meat chunks",
-          sizes: [
-            { label: "Small", price: 26000 },
-            { label: "Med", price: 50000 },
-            { label: "Large", price: 105000 },
-          ],
-        },
-        {
-          id: "pr4",
-          category: "protein",
-          name: "Peppered Ram Meat",
-          desc: "Savory peppered ram meat platter",
-          sizes: [
-            { label: "Small", price: 32000 },
-            { label: "Med", price: 62000 },
-            { label: "Large", price: 133000 },
-          ],
-        },
-        {
-          id: "pr5",
-          category: "protein",
-          name: "Peppered Hake Fish",
-          desc: "Crispy fried peppered hake fish cutlets",
-          sizes: [
-            { label: "Small", price: 23000 },
-            { label: "Med", price: 44000 },
-            { label: "Large", price: 87000 },
-          ],
-        },
-        {
-          id: "pr6",
-          category: "protein",
-          name: "Peppered Croaker Fish",
-          desc: "Juicy croaker fish in pepper sauce",
-          sizes: [
-            { label: "Small", price: 26000 },
-            { label: "Med", price: 50000 },
-            { label: "Large", price: 105000 },
-          ],
-        },
-        {
-          id: "pr7",
-          category: "protein",
-          name: "Peppered Snail",
-          desc: "Jumbo peppered snails platter",
-          sizes: [
-            { label: "Small", price: 25000 },
-            { label: "Med", price: 50000 },
-            { label: "Large", price: 105000 },
-          ],
-        },
-        {
-          id: "pr8",
-          category: "protein",
-          name: "Peppered Beef",
-          desc: "Savory seasoned peppered beef bites",
-          sizes: [
-            { label: "Small", price: 26000 },
-            { label: "Med", price: 50000 },
-            { label: "Large", price: 105000 },
-          ],
-        },
-        {
-          id: "pr9",
-          category: "protein",
-          name: "Mixed Protein Platter",
-          desc: "Combination platter of assorted peppered meats",
-          sizes: [
-            { label: "Small", price: 25000 },
-            { label: "Med", price: 50000 },
-            { label: "Large", price: 85000 },
-          ],
-        },
-        {
-          id: "pr10",
-          category: "protein",
-          name: "Moi Moi in Cup",
-          desc: "Steamed bean pudding cups",
-          sizes: [
-            { label: "Small", price: 15000 },
-            { label: "Med", price: 32000 },
-            { label: "Large", price: 64000 },
-          ],
-        },
-        {
-          id: "pr11",
-          category: "protein",
-          name: "Moi Moi Elewe",
-          desc: "Traditional leaf-wrapped steamed bean pudding",
-          sizes: [
-            { label: "Small", price: 20000 },
-            { label: "Med", price: 38000 },
-            { label: "Large", price: 70000 },
-          ],
-        },
-      ];
+          return {
+            id: row.id || `item_${idx}`,
+            category: row.category ? row.category.toLowerCase().replace(/\s+/g, "-") : "all",
+            name: row.name || row.itemname || "Unnamed Dish",
+            desc: row.desc || row.description || "",
+            sizes: sizes.length > 0 ? sizes : [{ label: "Portion", price: 0 }]
+          };
+        });
+      }
+
+      // Fetch Items Live from Google Sheets CSV
+      async function fetchMenuFromSheets() {
+        const loadingState = document.getElementById("loadingState");
+        try {
+          const response = await fetch(GOOGLE_SHEET_CSV_URL);
+          const data = await response.text();
+          const items = parseCSV(data);
+          
+          if (items && items.length > 0) {
+            menuItems = items;
+          }
+        } catch (error) {
+          console.error("Error fetching Google Sheet CSV:", error);
+        } finally {
+          if (loadingState) loadingState.classList.add("hidden");
+          renderMenu();
+        }
+      }
 
       // State variables
       let selectedCategory = "all";
@@ -1632,7 +876,7 @@
       // Initialize App on DOM Ready
       window.addEventListener("DOMContentLoaded", () => {
         renderCategories();
-        renderMenu();
+        fetchMenuFromSheets();
       });
     </script>
   </body>
