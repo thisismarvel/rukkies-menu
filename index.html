@@ -75,94 +75,179 @@
       .animate-slide-up {
         animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
+
+      /* ===== Dark mode ===== */
+      html.dark { color-scheme: dark; }
+      .dark body { background: #14100d; color: #e7e5e4; }
+
+      /* Surfaces */
+      .dark .bg-white { background: #1f1a17; }
+      .dark #cartBadge { background: #ffffff; }
+      .dark .bg-slate-50 { background: #292321; }
+      .dark .bg-orange-50, .dark .bg-orange-100 { background: #2a211c; }
+      .dark .bg-brand-100 { background: #431407; }
+
+      /* Borders */
+      .dark .border-slate-100, .dark .border-slate-200,
+      .dark .border-slate-200\/80, .dark .border-orange-100 { border-color: #3a322d; }
+
+      /* Text */
+      .dark .text-slate-900, .dark .text-slate-800 { color: #f5f5f4; }
+      .dark .text-slate-700 { color: #d6d3d1; }
+      .dark .text-slate-600, .dark .text-slate-500 { color: #a8a29e; }
+      .dark .text-brand-900, .dark .text-brand-800 { color: #fdba74; }
+      .dark .text-brand-600 { color: #fb923c; }
+      .dark .text-amber-900 { color: #fcd34d; }
+      .dark #cartBadge { color: #9a3412; }
+
+      /* Checkout form fields */
+      .dark #checkoutForm input,
+      .dark #checkoutForm textarea { background: #1f1a17; color: #f5f5f4; border-color: #3a322d; }
+      .dark label:has(:checked) { background: rgba(234, 88, 12, 0.15); }
     </style>
+
+    <!-- Apply saved / system theme before paint (prevents white flash) -->
+    <script>
+      (function () {
+        var t = null;
+        try { t = localStorage.getItem("theme"); } catch (e) {}
+        if (!t) {
+          t = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        if (t === "dark") document.documentElement.classList.add("dark");
+      })();
+    </script>
   </head>
   <body
     class="bg-orange-50/40 text-slate-800 font-sans min-h-screen pb-28 antialiased"
   >
-<!-- Header / Brand Section -->
-<header class="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-deep text-white sticky top-0 z-30 shadow-xl">
-  <div class="max-w-5xl mx-auto px-3 py-3 sm:px-4 sm:py-5">
-    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-4">
-      
-      <!-- Top Row: Logo, Brand Info & Location Badges -->
-      <div class="flex items-center justify-between gap-2 w-full sm:w-auto">
-        <div class="flex items-center gap-2.5 sm:gap-3 text-left">
-          <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center p-1 shadow-inner border border-white/20 shrink-0 overflow-hidden">
-            <img src="logo.png" alt="Rukkie's Logo" class="w-full h-full object-cover rounded-lg sm:rounded-xl" />
-          </div>
-          <div>
-            <h1 class="text-base sm:text-3xl font-extrabold tracking-tight font-serif text-amber-300 leading-tight">
-              Rukkie's Meals and Treats
-            </h1>
-            <p class="text-[10px] sm:text-sm text-orange-200 font-medium">
-              Easy Fix Combos, Bowls, Soups, Stews & Platters
-            </p>
-          </div>
-        </div>
-
-        <!-- Location Badges (Visible on Mobile as compact tags) -->
-        <div class="flex sm:hidden flex-col items-end gap-1 text-[10px] text-orange-100 shrink-0">
-          <span class="bg-black/30 px-2 py-0.5 rounded-md border border-white/10 flex items-center gap-1">
-            <i class="fa-solid fa-location-dot text-amber-400 text-[9px]"></i> Igando
-          </span>
-          <span class="bg-black/30 px-2 py-0.5 rounded-md border border-white/10 flex items-center gap-1">
-            <i class="fa-solid fa-truck-fast text-amber-400 text-[9px]"></i> All Lagos
-          </span>
-        </div>
-      </div>
-
-      <!-- Action Row: Search Bar & WhatsApp Button -->
-      <div class="flex items-center gap-2 w-full sm:w-auto">
-        <!-- Search Input -->
-        <div class="relative flex-1 sm:w-64 md:w-80">
-          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-orange-300 text-xs sm:text-sm"></i>
-          <input 
-            type="text" 
-            id="searchInput" 
-            placeholder="Search menu..." 
-            class="w-full pl-8 sm:pl-10 pr-7 py-2 sm:py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-orange-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white/20 transition"
-          />
-          <button id="clearSearch" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-orange-200 hover:text-white p-0.5">
-            <i class="fa-solid fa-xmark text-xs"></i>
-          </button>
-        </div>
-
-        <!-- WhatsApp Button -->
-        <a 
-          href="https://wa.me/2348100385700" 
-          target="_blank" 
-          class="bg-emerald-600 hover:bg-emerald-500 transition px-3 py-2 sm:py-2.5 rounded-xl font-semibold flex items-center gap-1.5 shrink-0 text-xs sm:text-sm text-white"
+    <!-- Header / Brand Section -->
+    <header
+      class="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-deep text-white sticky top-0 z-30 shadow-xl"
+    >
+      <div class="max-w-5xl mx-auto px-3 py-3 sm:px-4 sm:py-5">
+        <div
+          class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-4"
         >
-          <i class="fa-brands fa-whatsapp text-sm sm:text-base"></i>
-          <span class="hidden sm:inline">08100385700</span>
-        </a>
+          <!-- Top Row: Logo, Brand Info & Location Badges -->
+          <div class="flex items-center justify-between gap-2 w-full sm:w-auto">
+            <div class="flex items-center gap-2.5 sm:gap-3 text-left">
+              <div
+                class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center p-1 shadow-inner border border-white/20 shrink-0 overflow-hidden"
+              >
+                <img
+                  src="logo.png"
+                  alt="Rukkie's Logo"
+                  class="w-full h-full object-cover rounded-lg sm:rounded-xl"
+                />
+              </div>
+              <div>
+                <h1
+                  class="text-base sm:text-3xl font-extrabold tracking-tight font-serif text-amber-300 leading-tight"
+                >
+                  Rukkie's Meals and Treats
+                </h1>
+                <p class="text-[10px] sm:text-sm text-orange-200 font-medium">
+                  Easy Fix Combos, Bowls, Soups, Stews & Platters
+                </p>
+              </div>
+            </div>
+
+            <!-- Location Badges (Visible on Mobile as compact tags) -->
+            <div
+              class="flex sm:hidden flex-col items-end gap-1 text-[10px] text-orange-100 shrink-0"
+            >
+              <span
+                class="bg-black/30 px-2 py-0.5 rounded-md border border-white/10 flex items-center gap-1"
+              >
+                <i
+                  class="fa-solid fa-location-dot text-amber-400 text-[9px]"
+                ></i>
+                Igando
+              </span>
+              <span
+                class="bg-black/30 px-2 py-0.5 rounded-md border border-white/10 flex items-center gap-1"
+              >
+                <i class="fa-solid fa-truck-fast text-amber-400 text-[9px]"></i>
+                All Lagos
+              </span>
+            </div>
+          </div>
+
+          <!-- Action Row: Search Bar & WhatsApp Button -->
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <!-- Search Input -->
+            <div class="relative flex-1 sm:w-64 md:w-80">
+              <i
+                class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-orange-300 text-xs sm:text-sm"
+              ></i>
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search menu..."
+                class="w-full pl-8 sm:pl-10 pr-7 py-2 sm:py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-orange-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white/20 transition"
+              />
+              <button
+                id="clearSearch"
+                class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-orange-200 hover:text-white p-0.5"
+              >
+                <i class="fa-solid fa-xmark text-xs"></i>
+              </button>
+            </div>
+
+            <!-- WhatsApp Button -->
+            <a
+              href="https://wa.me/2348100385700"
+              target="_blank"
+              class="bg-emerald-600 hover:bg-emerald-500 transition px-3 py-2 sm:py-2.5 rounded-xl font-semibold flex items-center gap-1.5 shrink-0 text-xs sm:text-sm text-white"
+            >
+              <i class="fa-brands fa-whatsapp text-sm sm:text-base"></i>
+              <span class="hidden sm:inline">08100385700</span>
+            </a>
+
+            <!-- Dark Mode Toggle -->
+            <button
+              id="themeToggle"
+              onclick="toggleTheme()"
+              aria-label="Toggle dark mode"
+              class="bg-white/10 hover:bg-white/20 border border-white/20 w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 text-amber-300 transition"
+            >
+              <i id="themeIcon" class="fa-solid fa-moon"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Location Badges (Desktop View) -->
+        <div class="hidden sm:flex items-center justify-end gap-2 text-xs mt-3">
+          <span
+            class="bg-black/25 px-3 py-1 rounded-full border border-white/10 flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-location-dot text-amber-400"></i> Igando,
+            Lagos
+          </span>
+          <span
+            class="bg-black/25 px-3 py-1 rounded-full border border-white/10 flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-truck-fast text-amber-400"></i> Delivery
+            Anywhere Lagos
+          </span>
+        </div>
       </div>
 
-    </div>
-
-    <!-- Location Badges (Desktop View) -->
-    <div class="hidden sm:flex items-center justify-end gap-2 text-xs mt-3">
-      <span class="bg-black/25 px-3 py-1 rounded-full border border-white/10 flex items-center gap-1.5">
-        <i class="fa-solid fa-location-dot text-amber-400"></i> Igando, Lagos
-      </span>
-      <span class="bg-black/25 px-3 py-1 rounded-full border border-white/10 flex items-center gap-1.5">
-        <i class="fa-solid fa-truck-fast text-amber-400"></i> Delivery Anywhere Lagos
-      </span>
-    </div>
-  </div>
-
-  <!-- Category Navigation Bar -->
-  <div class="bg-brand-dark/40 border-t border-white/10 backdrop-blur-md">
-    <div class="max-w-5xl mx-auto px-3 py-2 overflow-x-auto hide-scrollbar flex items-center gap-2" id="categoryContainer">
-      <!-- Dynamic Categories -->
-    </div>
-  </div>
-</header>
+      <!-- Category Navigation Bar -->
+      <div class="bg-brand-dark/40 border-t border-white/10 backdrop-blur-md">
+        <div
+          class="max-w-5xl mx-auto px-3 py-2 overflow-x-auto hide-scrollbar flex items-center gap-2"
+          id="categoryContainer"
+        >
+          <!-- Dynamic Categories -->
+        </div>
+      </div>
+    </header>
 
     <!-- Main Menu Area -->
     <main class="max-w-5xl mx-auto px-4 py-6">
-            <!-- Why Choose Us / Founder Intro -->
+      <!-- Why Choose Us / Founder Intro -->
       <section
         class="mb-6 bg-white rounded-3xl overflow-hidden shadow-sm border border-orange-100 flex flex-col sm:flex-row"
       >
@@ -188,7 +273,8 @@
           <blockquote
             class="mt-4 text-sm sm:text-base text-slate-600 italic leading-relaxed border-l-4 border-amber-400 pl-4"
           >
-            “Every pot we cook is meant to make your day easier. Good food, ready when you are, and made like we're feeding family.”
+            “Every pot we cook is meant to make your day easier. Good food,
+            ready when you are, and made like we're feeding family.”
           </blockquote>
           <p class="mt-4 text-sm font-bold text-slate-800">
             RUKAYAT HASSAN-AJANAKU
@@ -207,8 +293,8 @@
         <div>
           <span class="font-bold">Order Info:</span>
           <span class="text-slate-700">
-            Combos & Bowl sizes measured in Litres (L). Seafood options incur extra charges where
-            applicable.</span
+            Combos & Bowl sizes measured in Litres (L). Seafood options incur
+            extra charges where applicable.</span
           >
         </div>
       </div>
@@ -501,7 +587,11 @@
         { id: "porridge", name: "Porridge", icon: "fa-wheat-awn" },
         { id: "soups", name: "Soups, Stews & Sauces", icon: "fa-bowl-hot" },
         { id: "swallow", name: "Swallow", icon: "fa-bread-slice" },
-        { id: "protein", name: "Protein Trays & Platters", icon: "fa-drumstick-bite" },
+        {
+          id: "protein",
+          name: "Protein Trays & Platters",
+          icon: "fa-drumstick-bite",
+        },
         { id: "proteins", name: "Protein Pieces", icon: "fa-bacon" },
         { id: "extra", name: "Extra", icon: "fa-bowl-hot" },
       ];
@@ -509,78 +599,96 @@
       let menuItems = [];
 
       // ============================================================
-// REPLACE your whole old parseCSV() function with everything below.
-// (Keep your `categories` array, fetchMenuFromSheets(), and everything else.)
-// ============================================================
+      // REPLACE your whole old parseCSV() function with everything below.
+      // (Keep your `categories` array, fetchMenuFromSheets(), and everything else.)
+      // ============================================================
 
-// Sheet category name (lowercase)  ->  your tab id in `categories`
-const CATEGORY_MAP = {
-  "easy fix combo": "combo",
-  "rice & pasta": "rice-pasta",
-  "porridge": "porridge",
-  "soup, stew & sauce": "soups",
-  "swallow": "swallow",
-  "protein - trays & platters": "protein",
-  "protein pieces": "proteins",
-  "extra": "extra",
-};
+      // Sheet category name (lowercase)  ->  your tab id in `categories`
+      const CATEGORY_MAP = {
+        "easy fix combo": "combo",
+        "rice & pasta": "rice-pasta",
+        porridge: "porridge",
+        "soup, stew & sauce": "soups",
+        swallow: "swallow",
+        "protein - trays & platters": "protein",
+        "protein pieces": "proteins",
+        extra: "extra",
+      };
 
-// Proper CSV reader: handles quoted cells, commas inside quotes, and empty cells
-function parseCSVRows(text) {
-  const rows = [];
-  let row = [], cell = "", inQuotes = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (inQuotes) {
-      if (c === '"') {
-        if (text[i + 1] === '"') { cell += '"'; i++; }
-        else inQuotes = false;
-      } else cell += c;
-    } else if (c === '"') inQuotes = true;
-    else if (c === ",") { row.push(cell); cell = ""; }
-    else if (c === "\n" || c === "\r") {
-      if (c === "\r" && text[i + 1] === "\n") i++;
-      row.push(cell); rows.push(row); row = []; cell = "";
-    } else cell += c;
-  }
-  if (cell !== "" || row.length) { row.push(cell); rows.push(row); }
-  return rows;
-}
+      // Proper CSV reader: handles quoted cells, commas inside quotes, and empty cells
+      function parseCSVRows(text) {
+        const rows = [];
+        let row = [],
+          cell = "",
+          inQuotes = false;
+        for (let i = 0; i < text.length; i++) {
+          const c = text[i];
+          if (inQuotes) {
+            if (c === '"') {
+              if (text[i + 1] === '"') {
+                cell += '"';
+                i++;
+              } else inQuotes = false;
+            } else cell += c;
+          } else if (c === '"') inQuotes = true;
+          else if (c === ",") {
+            row.push(cell);
+            cell = "";
+          } else if (c === "\n" || c === "\r") {
+            if (c === "\r" && text[i + 1] === "\n") i++;
+            row.push(cell);
+            rows.push(row);
+            row = [];
+            cell = "";
+          } else cell += c;
+        }
+        if (cell !== "" || row.length) {
+          row.push(cell);
+          rows.push(row);
+        }
+        return rows;
+      }
 
       // Turns any Google Drive share link into a displayable image URL
-function driveImageUrl(link) {
-  if (!link) return "";
-  const m =
-    link.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
-    link.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  return m
-    ? `https://drive.google.com/thumbnail?id=${m[1]}&sz=w800`
-    : link; // not a Drive link, use as-is
-}
-      
-// Sheet has ONE ROW PER SIZE. This groups rows into one card per item.
-function parseCSV(csvText) {
-  const rows = parseCSVRows(csvText);
-  if (rows.length < 2) return [];
+      function driveImageUrl(link) {
+        if (!link) return "";
+        const m =
+          link.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
+          link.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+        return m
+          ? `https://drive.google.com/thumbnail?id=${m[1]}&sz=w800`
+          : link; // not a Drive link, use as-is
+      }
 
-  const headers = rows[0].map((h) => h.trim().toLowerCase().replace(/[^a-z0-9]/g, ""));
-  const grouped = new Map();
+      // Sheet has ONE ROW PER SIZE. This groups rows into one card per item.
+      function parseCSV(csvText) {
+        const rows = parseCSVRows(csvText);
+        if (rows.length < 2) return [];
 
-  rows.slice(1).forEach((cells) => {
-    const r = {};
-    headers.forEach((h, i) => (r[h] = (cells[i] || "").trim()));
+        const headers = rows[0].map((h) =>
+          h
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, ""),
+        );
+        const grouped = new Map();
 
-    if (!r.item || !r.category) return;                    // skip blank rows
-    if ((r.available || "yes").toLowerCase() === "no") return; // hidden items
+        rows.slice(1).forEach((cells) => {
+          const r = {};
+          headers.forEach((h, i) => (r[h] = (cells[i] || "").trim()));
 
-    const price = parseFloat((r.price || "").replace(/[^0-9.]/g, ""));
-    if (!price) return;
+          if (!r.item || !r.category) return; // skip blank rows
+          if ((r.available || "yes").toLowerCase() === "no") return; // hidden items
 
-    const catKey = r.category.toLowerCase();
-    const catId = CATEGORY_MAP[catKey] || catKey.replace(/[^a-z0-9]+/g, "-");
-    const key = catId + "|" + r.item.toLowerCase();
+          const price = parseFloat((r.price || "").replace(/[^0-9.]/g, ""));
+          if (!price) return;
 
-              if (!grouped.has(key)) {
+          const catKey = r.category.toLowerCase();
+          const catId =
+            CATEGORY_MAP[catKey] || catKey.replace(/[^a-z0-9]+/g, "-");
+          const key = catId + "|" + r.item.toLowerCase();
+
+          if (!grouped.has(key)) {
             grouped.set(key, {
               id: "item_" + grouped.size,
               category: catId,
@@ -594,13 +702,16 @@ function parseCSV(csvText) {
             grouped.get(key).image = driveImageUrl(r.image);
           }
           grouped.get(key).sizes.push({ label: r.size || "Standard", price });
-  });
+        });
 
-  // Show "All Items" in the same order as your category tabs
-  const order = categories.map((c) => c.id);
-  const rank = (id) => (order.indexOf(id) === -1 ? 99 : order.indexOf(id));
-  return [...grouped.values()].sort((a, b) => rank(a.category) - rank(b.category));
-}
+        // Show "All Items" in the same order as your category tabs
+        const order = categories.map((c) => c.id);
+        const rank = (id) =>
+          order.indexOf(id) === -1 ? 99 : order.indexOf(id);
+        return [...grouped.values()].sort(
+          (a, b) => rank(a.category) - rank(b.category),
+        );
+      }
 
       // Fetch Items Live from Google Sheets CSV
       async function fetchMenuFromSheets() {
@@ -648,7 +759,7 @@ function parseCSV(csvText) {
           .join("");
       }
 
-            // Set Active Category
+      // Set Active Category
       function setCategory(catId) {
         selectedCategory = catId;
         renderCategories();
@@ -970,6 +1081,22 @@ function parseCSV(csvText) {
         window.open(whatsappUrl, "_blank");
       }
 
+      // Dark mode
+      function applyTheme(mode) {
+        document.documentElement.classList.toggle("dark", mode === "dark");
+        const icon = document.getElementById("themeIcon");
+        if (icon)
+          icon.className = "fa-solid " + (mode === "dark" ? "fa-sun" : "fa-moon");
+      }
+
+      function toggleTheme() {
+        const next = document.documentElement.classList.contains("dark")
+          ? "light"
+          : "dark";
+        try { localStorage.setItem("theme", next); } catch (e) {}
+        applyTheme(next);
+      }
+
       // Search Input Event
       document.getElementById("searchInput").addEventListener("input", (e) => {
         searchQuery = e.target.value;
@@ -991,6 +1118,9 @@ function parseCSV(csvText) {
 
       // Initialize App on DOM Ready
       window.addEventListener("DOMContentLoaded", () => {
+        applyTheme(
+          document.documentElement.classList.contains("dark") ? "dark" : "light",
+        );
         renderCategories();
         fetchMenuFromSheets();
       });
