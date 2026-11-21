@@ -170,7 +170,7 @@
           <img
             src="Founder.jpg"
             alt="Founder of Rukkie's Meals and Treats"
-            class="w-full h-64 sm:h-full object-cover"
+            class="w-full h-64 sm:h-full object-cover object-top sm:object-center"
             onerror="this.parentElement.classList.add('hidden')"
           />
         </div>
@@ -214,7 +214,7 @@
       </div>
 
       <!-- Category Title & Counter -->
-      <div class="flex items-center justify-between mb-4">
+      <div id="menuTop" class="flex items-center justify-between mb-4">
         <h2
           id="currentCategoryTitle"
           class="text-xl sm:text-2xl font-bold text-slate-900 font-serif"
@@ -648,7 +648,7 @@ function parseCSV(csvText) {
           .join("");
       }
 
-      // Set Active Category
+            // Set Active Category
       function setCategory(catId) {
         selectedCategory = catId;
         renderCategories();
@@ -658,6 +658,16 @@ function parseCSV(csvText) {
         document.getElementById("currentCategoryTitle").innerText = catObj
           ? catObj.name
           : "All Items";
+
+        // Scroll so the intro is out of view and the menu starts under the sticky header
+        const header = document.querySelector("header");
+        const target = document.getElementById("menuTop");
+        const y =
+          target.getBoundingClientRect().top +
+          window.scrollY -
+          header.offsetHeight -
+          12;
+        window.scrollTo({ top: y, behavior: "smooth" });
       }
 
       // Render Menu Items Grid
